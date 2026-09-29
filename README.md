@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Food Stalls App / Kawaii Count
 
-## Getting Started
+Kawaii Count was originally a Java Enterprise project which had the opportunity to be reused for Enterprise Programming as a food stall sales application. This project includes simple inventory tracking, quick order creation, and a robust user management system for admin roles.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Order Tracking:** Users can log customer orders directly into the system, where they can monitor order details through a simple list.
+- **Inventory and Stock Management:** Users are provided with tools to manage the menu effectively, such as adding new meals, edit existing ones, or delete items that are no longer available.
+- **User Management:** The application includes role-based management and login during sign up.
+- **Dashboard Analytics:** Users can see partial analytics of amount sold, total revenue, and popular products on the dashboard. Administrator roles get full access to all analytics.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Team Members
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Project Manager:** Dwyane Sido
+- **Frontend Developer:** Adi De Vera
+- **Backend Developer:** Dave Bartolabac
+- **UI/UX Designer:** Jezcois Garganza
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Timeline
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+|| Week Goal | Description | Key Deliverables |
+| --- | --- | --- | --- |
+| **Week 1** | Project Initialization | Setup the project on GitHub and project structure | GitHub repository and complete project timeline |
+| **Week 2** | UI/UX Design and Figma Mockups | Build Figma mockups for the main application screens | Figma link with the required wireframes and mockups |
+| **Week 3** | Backend and Supabase Database Setup | Setup Supabase Drizzle ORM and schema | Fully functional Supabase connection and ERD schema |
+| **Week 4-5** | Core UI Page Implementation | Implement core UI pages for the application | Core UI pages can be seen and interacted with |
+| **Week 6-7** | Endpoint Integration | Connect Supabase schema to the core application | Connect dashboard analytics and order tracking to the Supabase database |
+| **Week 8** | Optimization, Final Testing and Bug Fixing | Fix and check for any remaining bugs and optimize slow connections | Prepared and deployment ready application |
