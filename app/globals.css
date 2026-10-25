@@ -12,6 +12,7 @@
 
   /* brand colors */
   --color-primary: #E76D8A;
+  --color-primary-soft: #F4A9B9;
 }
 
 @theme inline {
