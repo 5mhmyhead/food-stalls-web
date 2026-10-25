@@ -3,6 +3,7 @@
 import Image from "next/image";
 import TextField from "../text-field";
 import { User, Lock } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm({
   onSignUp,
@@ -11,6 +12,12 @@ export default function LoginForm({
   onSignUp: () => void;
   onForgot: () => void;
 }) { 
+  const router = useRouter();
+
+  async function handleLogin() {
+    router.push("/home");
+  }
+
   return (
     <section className="h-full w-full flex flex-col bg-surface p-12 items-center justify-center rounded-3xl gap-6">
       <div className="flex flex-col justify-center items-center gap-3">
@@ -25,7 +32,7 @@ export default function LoginForm({
         </h1>
         <p>Welcome back to your favorite food stalls app!</p>
       </div>
-      <form className="flex flex-col gap-6" action="">
+      <form className="flex flex-col gap-6" onSubmit={handleLogin}>
         <TextField
           id="username"
           type="text"
