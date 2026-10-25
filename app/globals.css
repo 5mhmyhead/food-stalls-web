@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+@theme {
+  /* background surfaces */
+  --color-background: #F8E9E5;
+  --color-surface: #E8D9D5;
+  --color-surface-container: #F0E0DC;
+
+  /* text colors */
+  --color-onSurface: #253657;
+  --color-muted: #565F77;
+
+  /* brand colors */
+  --color-primary: #E76D8A;
+}
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-onSurface);
+  }
+}

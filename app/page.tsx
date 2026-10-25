@@ -1,3 +1,11 @@
+import AuthPanel from "@/components/auth/auth-panel";
+import HeroPanel from "@/components/auth/hero-panel";
+
 export default function Home() {
-  return <h1>Welcome to the Food Stalls app!</h1>
+  return (
+    <main className="flex w-dvw h-dvh overflow-hidden p-6 gap-6">
+      <HeroPanel />
+      <AuthPanel />
+    </main>
+  );
 }
