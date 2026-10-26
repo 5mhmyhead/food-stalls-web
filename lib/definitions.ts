@@ -33,3 +33,25 @@ export const SignUpSchema = z
     error: "Passwords do not match.",
     path: ["confirmPassword"],
   });
+export const ForgotPasswordSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .pipe(z.email({ error: "Enter a valid email address." })),
+});
+
+export const ResetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, { error: "Password needs at least 8 characters." })
+      .regex(/[a-z]/, { error: "Password needs a lowercase letter." })
+      .regex(/[A-Z]/, { error: "Password needs an uppercase letter." })
+      .regex(/\d/, { error: "Password needs a number." }),
+    confirmPassword: z.string(),
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    error: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });

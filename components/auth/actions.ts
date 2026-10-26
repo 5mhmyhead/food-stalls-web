@@ -1,14 +1,19 @@
 "use server";
-
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { createClient } from "@/utils/supabase/server";
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
-import { SignInSchema, SignUpSchema } from "@/lib/definitions";
+import {
+  SignInSchema,
+  SignUpSchema,
+  ForgotPasswordSchema,
+  ResetPasswordSchema,
+} from "@/lib/definitions";
 
 export type AuthState =
-  | { message?: string; username?: string; email?: string }
+  | { message?: string; username?: string; email?: string; success?: boolean }
   | undefined;
 
 export async function signIn(
@@ -82,9 +87,53 @@ export async function signUp(
 
   redirect("/home"); //redirects to home page after successful sign up
 }
-
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/");
+}
+export async function requestPasswordReset(
+  _prev: AuthState,
+  form: FormData,
+): Promise<AuthState> {
+  const email = String(form.get("email") ?? "");
+  const parsed = ForgotPasswordSchema.safeParse({ email });
+  if (!parsed.success)
+    return { message: parsed.error.issues[0].message, email };
+
+  const origin = (await headers()).get("origin") ?? "http://localhost:3000";
+
+  const supabase = await createClient();
+  await supabase.auth.resetPasswordForEmail(parsed.data.email, {
+    redirectTo: `${origin}/auth/confirm`,
+  });
+
+  return {
+    message: "If that email has an account, we sent a reset link.",
+    email: parsed.data.email,
+    success: true,
+  };
+}
+export async function updatePassword(
+  _prev: AuthState,
+  form: FormData,
+): Promise<AuthState> {
+  const parsed = ResetPasswordSchema.safeParse({
+    password: form.get("password"),
+    confirmPassword: form.get("confirmPassword"),
+  });
+  if (!parsed.success) return { message: parsed.error.issues[0].message };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.password,
+  });
+  if (error) {
+    return {
+      message:
+        "Could not update your password. The link may have expired, so request a new one.",
+    };
+  }
+
+  redirect("/home");
 }

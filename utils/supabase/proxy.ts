@@ -27,10 +27,14 @@ export async function updateSession(request: NextRequest) {
 
   const { data } = await supabase.auth.getClaims();
 
-  if (!data?.claims && request.nextUrl.pathname !== "/") {
+  const path = request.nextUrl.pathname;
+  const isPublic = path === "/" || path.startsWith("/auth/confirm");
+
+  if (!data?.claims && !isPublic) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);
   }
+
   return response;
 }
