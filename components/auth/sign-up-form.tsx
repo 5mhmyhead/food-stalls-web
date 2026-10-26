@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import TextField from "../text-field";
-import { User, Lock } from "lucide-react";
+import { User, Lock, Mail } from "lucide-react";
 
 type SignUpFormProps = {
   onBack: () => void;
@@ -21,7 +21,6 @@ export default function SignUpForm({ onBack }: SignUpFormProps) {
         <h1  className="font-serif text-6xl font-black tracking-wide">
           Sign up
         </h1>
-        <p>Start your journey with us!</p>
       </div>
       <form className="flex flex-col gap-6" action="">
         <TextField
@@ -31,6 +30,14 @@ export default function SignUpForm({ onBack }: SignUpFormProps) {
           required
           icon={<User size={28} />}
           placeholder="e.g. johndoe123"
+        />
+        <TextField
+          id="email"
+          type="email"
+          label="Email"
+          required
+          icon={<Mail size={28} />}
+          placeholder="e.g. johndoe@email.com"
         />
         <TextField
           id="password"
