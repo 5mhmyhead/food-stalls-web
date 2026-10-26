@@ -20,7 +20,7 @@ export function Sidebar() {
   ).sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
   return (
-    <nav className="w-85 shrink-0 p-6 text-background">
+    <nav className="w-80 shrink-0 text-background">
       <div className="w-full h-full bg-primary rounded-3xl p-6">
         <div className="flex flex-col items-center justify-center gap-1 pb-10">
           <Image src="/logo-white.svg" alt="logo" width={36} height={36} />

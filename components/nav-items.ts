@@ -3,7 +3,6 @@ import {
   Utensils,
   ShoppingBag,
   History,
-  User,
   Settings,
   LogOut,
   type LucideIcon,
@@ -37,11 +36,6 @@ export const NAV_ITEMS: NavItem[] = [
     label: "History",
     href: "/history",
     icon: History,
-  },
-  {
-    label: "Profile",
-    href: "/profile",
-    icon: User,
   },
   {
     label: "Settings",

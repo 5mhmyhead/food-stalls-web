@@ -34,7 +34,7 @@ export default function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) 
         />
         <button
           type="submit"
-          className="w-full px-6 py-2.5 rounded-xl bg-primary text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-90"
+          className="w-full btn-primary"
         >
           Send a reset link
         </button>

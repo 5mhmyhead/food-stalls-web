@@ -58,7 +58,7 @@ export default function LoginForm({
         </button>
         <button
           type="submit"
-          className="w-full px-6 py-2.5 rounded-xl bg-primary text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-90"
+          className="w-full btn-primary"
         >
           Sign in
         </button>
