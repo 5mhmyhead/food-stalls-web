@@ -1,14 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import { useActionState } from "react";
 import TextField from "../text-field";
 import { User, Lock, Mail } from "lucide-react";
+import { signUp } from "@/components/auth/actions";
 
 type SignUpFormProps = {
   onBack: () => void;
 };
 
 export default function SignUpForm({ onBack }: SignUpFormProps) {
+  const [state, action, pending] = useActionState(signUp, undefined);
+
   return (
     <section className="h-full w-full flex flex-col bg-surface p-12 items-center justify-center rounded-3xl gap-6">
       <div className="flex flex-col justify-center items-center gap-3">
@@ -17,9 +21,11 @@ export default function SignUpForm({ onBack }: SignUpFormProps) {
           Sign up
         </h1>
       </div>
-      <form className="flex flex-col gap-6" action="">
+      <form className="flex flex-col gap-6" action={action}>
         <TextField
           id="username"
+          name="username"
+          defaultValue={state?.username}
           type="text"
           label="Username"
           required
@@ -28,6 +34,8 @@ export default function SignUpForm({ onBack }: SignUpFormProps) {
         />
         <TextField
           id="email"
+          name="email"
+          defaultValue={state?.email}
           type="email"
           label="Email"
           required
@@ -36,6 +44,7 @@ export default function SignUpForm({ onBack }: SignUpFormProps) {
         />
         <TextField
           id="password"
+          name="password"
           type="password"
           label="Password"
           required
@@ -44,17 +53,20 @@ export default function SignUpForm({ onBack }: SignUpFormProps) {
         />
         <TextField
           id="confirm-password"
+          name="confirmPassword"
           type="password"
           label="Confirm Password"
           required
           icon={<Lock size={28} />}
           placeholder="retype your strong password"
         />
-        <button
-          type="submit"
-          className="w-full btn-primary"
-        >
-          Create Account
+        {state?.message && (
+          <p className="text-sm text-red-600" role="alert">
+            {state.message}
+          </p>
+        )}
+        <button type="submit" disabled={pending} className="w-full btn-primary">
+          {pending ? "Creating account..." : "Create Account"}
         </button>
       </form>
       <div>
