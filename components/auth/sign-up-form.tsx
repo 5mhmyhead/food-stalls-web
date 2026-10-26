@@ -12,13 +12,8 @@ export default function SignUpForm({ onBack }: SignUpFormProps) {
   return (
     <section className="h-full w-full flex flex-col bg-surface p-12 items-center justify-center rounded-3xl gap-6">
       <div className="flex flex-col justify-center items-center gap-3">
-        <Image
-          src="/logo-blue.svg"
-          alt="logo"
-          width={64}
-          height={64}
-        />
-        <h1  className="font-serif text-6xl font-black tracking-wide">
+        <Image src="/logo-blue.svg" alt="logo" width={64} height={64} />
+        <h1 className="font-serif text-6xl font-black tracking-wide">
           Sign up
         </h1>
       </div>
