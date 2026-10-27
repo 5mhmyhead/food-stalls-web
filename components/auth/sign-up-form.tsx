@@ -61,11 +61,11 @@ export default function SignUpForm({ onBack }: SignUpFormProps) {
           placeholder="retype your strong password"
         />
         {state?.message && (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="text-primary" role="alert">
             {state.message}
           </p>
         )}
-        <button type="submit" disabled={pending} className="w-full btn-primary">
+        <button type="submit" disabled={pending} className="w-full btn-primary disabled:opacity-75">
           {pending ? "Creating account..." : "Create Account"}
         </button>
       </form>

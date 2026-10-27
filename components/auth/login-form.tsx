@@ -45,7 +45,7 @@ export default function LoginForm({
           placeholder="enter your password"
         />
         {state?.message && (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="text-primary" role="alert">
             {state.message}
           </p>
         )}
@@ -56,7 +56,7 @@ export default function LoginForm({
         >
           forgot password?
         </button>
-        <button type="submit" disabled={pending} className="w-full btn-primary">
+        <button type="submit" disabled={pending} className="w-full btn-primary disabled:opacity-75">
           {pending ? "Signing in..." : "Sign in"}
         </button>
       </form>

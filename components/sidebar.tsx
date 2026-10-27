@@ -50,7 +50,6 @@ export function Sidebar({ username }: { username: string }) {
           <Link
             key={item.href}
             href={item.href}
-            aria-current={active ? "page" : undefined}
             className={`relative flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-colors duration-300 ${
               active ? "text-primary" : "hover:bg-primary-soft/50"
             }`}

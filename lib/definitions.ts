@@ -33,6 +33,7 @@ export const SignUpSchema = z
     error: "Passwords do not match.",
     path: ["confirmPassword"],
   });
+  
 export const ForgotPasswordSchema = z.object({
   email: z
     .string()

@@ -12,7 +12,6 @@ export default function MenuPage() {
       <div className="flex flex-col gap-6 pt-6">
         <div className="w-full rounded-3xl bg-surface p-6">
           <MenuToolbar categories={mockCategories} products={mockProducts} />
-          <p className="text-muted mt-5">{mockProducts.length} items</p>
         </div>
 
         <div className="w-full rounded-3xl bg-surface p-6">

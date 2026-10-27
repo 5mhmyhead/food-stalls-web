@@ -6,11 +6,11 @@ export type Product = typeof products.$inferSelect;
 const OWNER = "dwyanesido";
 
 export const mockCategories: Category[] = [
-  { id: 1, createdBy: OWNER, name: "Breakfast", icon: "🍳" },
-  { id: 2, createdBy: OWNER, name: "Lunch", icon: "🍱" },
-  { id: 3, createdBy: OWNER, name: "Dinner", icon: "🍛" },
-  { id: 4, createdBy: OWNER, name: "Appetizer", icon: "🥟" },
-  { id: 5, createdBy: OWNER, name: "Drinks", icon: "🧋" },
+  { id: 1, createdBy: OWNER, name: "Breakfast", icon: "CookingPot" },
+  { id: 2, createdBy: OWNER, name: "Lunch", icon: "Utensils" },
+  { id: 3, createdBy: OWNER, name: "Dinner", icon: "Soup" },
+  { id: 4, createdBy: OWNER, name: "Appetizer", icon: "Cookie" },
+  { id: 5, createdBy: OWNER, name: "Drinks", icon: "CupSoda" },
 ];
 
 export const mockProducts: Product[] = [

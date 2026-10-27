@@ -13,10 +13,7 @@ type ForgotPasswordFormProps = {
 export default function ForgotPasswordForm({
   onBack,
 }: ForgotPasswordFormProps) {
-  const [state, action, pending] = useActionState(
-    requestPasswordReset,
-    undefined,
-  );
+  const [state, action, pending] = useActionState(requestPasswordReset, undefined);
 
   return (
     <section className="h-full w-full flex flex-col bg-surface p-12 items-center justify-center rounded-3xl gap-6">
@@ -39,14 +36,11 @@ export default function ForgotPasswordForm({
           placeholder="enter your email"
         />
         {state?.message && (
-          <p
-            className={`text-sm ${state.success ? "text-green-700" : "text-red-600"}`}
-            role="status"
-          >
+          <p className="text-primary" role="status">
             {state.message}
           </p>
         )}
-        <button type="submit" disabled={pending} className="w-full btn-primary">
+        <button type="submit" disabled={pending} className="w-full btn-primary disabled:opacity-75">
           {pending ? "Sending..." : "Send a reset link"}
         </button>
       </form>

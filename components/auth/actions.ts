@@ -21,10 +21,8 @@ export async function signIn(
   form: FormData,
 ): Promise<AuthState> {
   const username = String(form.get("username") ?? "");
-  const parsed = SignInSchema.safeParse({
-    username,
-    password: form.get("password"),
-  });
+  const parsed = SignInSchema.safeParse({username, password: form.get("password")});
+  
   if (!parsed.success) {
     return { message: "Enter your username and password.", username };
   }
@@ -43,7 +41,7 @@ export async function signIn(
   });
   if (error) return { message: "Wrong username or password.", username };
 
-  redirect("/home"); //redirects to the home page after successful login
+  redirect("/home");
 }
 
 export async function signUp(
@@ -52,12 +50,14 @@ export async function signUp(
 ): Promise<AuthState> {
   const username = String(form.get("username") ?? "");
   const email = String(form.get("email") ?? "");
+
   const parsed = SignUpSchema.safeParse({
     username,
     email,
     password: form.get("password"),
     confirmPassword: form.get("confirmPassword"),
   });
+
   if (!parsed.success) {
     return { message: parsed.error.issues[0].message, username, email };
   }
@@ -75,6 +75,7 @@ export async function signUp(
     password: parsed.data.password,
     options: { data: { username: parsed.data.username } },
   });
+
   if (error) {
     return {
       message: error.message.toLowerCase().includes("registered")
@@ -85,21 +86,25 @@ export async function signUp(
     };
   }
 
-  redirect("/home"); //redirects to home page after successful sign up
+  redirect("/home");
 }
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/");
 }
+
 export async function requestPasswordReset(
   _prev: AuthState,
   form: FormData,
 ): Promise<AuthState> {
   const email = String(form.get("email") ?? "");
   const parsed = ForgotPasswordSchema.safeParse({ email });
-  if (!parsed.success)
+  
+  if (!parsed.success) {
     return { message: parsed.error.issues[0].message, email };
+  }
 
   const origin = (await headers()).get("origin") ?? "http://localhost:3000";
 
@@ -114,6 +119,7 @@ export async function requestPasswordReset(
     success: true,
   };
 }
+
 export async function updatePassword(
   _prev: AuthState,
   form: FormData,
@@ -122,12 +128,16 @@ export async function updatePassword(
     password: form.get("password"),
     confirmPassword: form.get("confirmPassword"),
   });
-  if (!parsed.success) return { message: parsed.error.issues[0].message };
+
+  if (!parsed.success) {
+    return { message: parsed.error.issues[0].message };
+  }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({
     password: parsed.data.password,
   });
+  
   if (error) {
     return {
       message:

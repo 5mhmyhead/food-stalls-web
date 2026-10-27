@@ -1,6 +1,23 @@
-import { Search } from "lucide-react";
+import {
+  Search,
+  CookingPot,
+  Utensils,
+  Soup,
+  Cookie,
+  CupSoda,
+  LayoutGrid,
+  type LucideIcon,
+} from "lucide-react";
 import TextField from "../text-field";
 import type { Category, Product } from "@/lib/mock-data";
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  CookingPot,
+  Utensils,
+  Soup,
+  Cookie,
+  CupSoda,
+};
 
 interface MenuToolbarProps {
   categories: Category[];
@@ -25,28 +42,34 @@ export default function MenuToolbar({ categories, products }: MenuToolbarProps) 
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
-          className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2 font-bold text-background"
+          className="flex flex-col items-start gap-2 rounded-xl bg-primary px-5 py-3 font-bold text-background"
         >
-          <span>All Items</span>
-          <span className="rounded-md bg-background/20 px-2 py-0.5 text-xs font-semibold">
-            {products.length}
-          </span>
+          <LayoutGrid className="size-7 shrink-0" />
+          <div className="flex gap-3 items-center">
+            <span className="font-serif text-2xl">All Items</span>
+            <span className="rounded-md bg-background/20 px-2 py-0.5 font-medium">
+              {products.length}
+            </span>
+          </div>
         </button>
 
         {categories.map((category) => {
           const count = categoryCounts[category.id] ?? 0;
+          const CategoryIcon = ICON_MAP[category.icon];
 
           return (
             <button
               key={category.id}
               type="button"
-              aria-pressed="false"
-              className="flex items-center gap-2 rounded-xl bg-surface-container px-5 py-2 font-bold text-muted transition-colors hover:text-primary"
+              className="flex flex-col items-start gap-2 rounded-xl bg-surface-container px-5 py-3 font-bold text-muted transition-colors hover:text-primary"
             >
-              <span>{category.icon} {category.name}</span>
-              <span className="rounded-md bg-muted/15 px-2 py-0.5 text-xs font-semibold text-muted">
-                {count}
-              </span>
+              {CategoryIcon && <CategoryIcon className="size-7 shrink-0" />}
+              <div className="flex gap-3 items-center">
+                <span className="font-serif text-2xl">{category.name}</span>
+                <span className="rounded-md bg-muted/10 px-2 py-0.5 font-medium text-muted">
+                  {count}
+                </span>
+              </div>  
             </button>
           );
         })}
