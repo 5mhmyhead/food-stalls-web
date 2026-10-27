@@ -14,11 +14,11 @@ export default function TextField({
   return (
     <div>
       {label && (
-        <label htmlFor={id} className="text-lg">
+        <label htmlFor={id} className="block mb-1 text-lg">
           {label}
         </label>
       )}
-      <div className="mt-1 group flex items-center gap-3 rounded-xl border-2 border-transparent bg-surface-container px-3 transition-colors focus-within:border-primary">
+      <div className="group flex items-center gap-3 rounded-xl border-2 border-transparent bg-surface-container px-3 transition-colors focus-within:border-primary">
         {icon && (
           <>
             <span className="shrink-0 text-muted/75 transition-colors group-focus-within:text-primary">

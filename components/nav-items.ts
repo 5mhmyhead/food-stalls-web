@@ -16,7 +16,7 @@ export interface NavItem {
   icon: NavIcon;
 }
 
-export const NAV_ITEMS: NavItem[] = [
+export const TOP_NAV_ITEMS: NavItem[] = [
   {
     label: "Home",
     href: "/home",
@@ -37,6 +37,9 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/history",
     icon: History,
   },
+];
+
+export const BOTTOM_NAV_ITEMS: NavItem[] = [
   {
     label: "Settings",
     href: "/settings",
