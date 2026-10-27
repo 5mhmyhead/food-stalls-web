@@ -9,8 +9,9 @@ import {
   BOTTOM_NAV_ITEMS,
   type NavItem,
 } from "@/components/nav-items";
+import { signOut } from "@/components/auth/actions";
 
-export function Sidebar() {
+export function Sidebar({ username }: { username: string }) {
   const pathname = usePathname();
   const reduce = useReducedMotion();
 
@@ -28,6 +29,22 @@ export function Sidebar() {
       {items.map((item) => {
         const Icon = item.icon;
         const active = item.href === activeHref;
+
+        if (item.label === "Sign Out") {
+          return (
+            <form action={signOut} key={item.label}>
+              <button
+                type="submit"
+                className="relative flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-colors duration-300 hover:bg-primary-soft/50"
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  <Icon className="block size-6 shrink-0" />
+                  {item.label}
+                </span>
+              </button>
+            </form>
+          );
+        }
 
         return (
           <Link
@@ -64,12 +81,10 @@ export function Sidebar() {
             <h1 className="font-serif text-3xl font-black tracking-wide">
               Kawaii Count
             </h1>
-            <p className="text-sm">Welcome back, user!</p>
+            <p className="text-sm">Welcome back, {username}!</p>
           </div>
-
           {renderNavLinks(TOP_NAV_ITEMS)}
         </div>
-        
         {renderNavLinks(BOTTOM_NAV_ITEMS)}
       </div>
     </nav>

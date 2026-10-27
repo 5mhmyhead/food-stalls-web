@@ -23,6 +23,7 @@ export const profiles = pgTable("profiles", {
     .primaryKey()
     .references(() => authUsers.id, { onDelete: "cascade" }),
   username: text("username").notNull().unique(),
+  email: text("email").notNull().unique(),
   accountType: accountType("account_type").notNull().default("WORKER"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 }).enableRLS();

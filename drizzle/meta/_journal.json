@@ -15,6 +15,27 @@
       "when": 1792987433986,
       "tag": "0001_auth-profile-trigger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792990884520,
+      "tag": "0002_add-profile-email",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792990893403,
+      "tag": "0003_update-profile-trigger",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792993929342,
+      "tag": "0004_rls-policies",
+      "breakpoints": true
     }
   ]
 }
