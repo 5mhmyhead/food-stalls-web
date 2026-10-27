@@ -5,11 +5,13 @@ import { eq } from "drizzle-orm";
 import { createClient } from "@/utils/supabase/server";
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
+import { verifyUser } from "@/lib/dal";
 import {
   SignInSchema,
   SignUpSchema,
   ForgotPasswordSchema,
   ResetPasswordSchema,
+  ChangePasswordSchema,
 } from "@/lib/definitions";
 
 export type AuthState =
@@ -136,4 +138,45 @@ export async function updatePassword(
   }
 
   redirect("/home");
+}
+export async function changePassword(
+  _prev: AuthState,
+  form: FormData,
+): Promise<AuthState> {
+  const { email } = await verifyUser();
+
+  const parsed = ChangePasswordSchema.safeParse({
+    currentPassword: form.get("currentPassword"),
+    newPassword: form.get("newPassword"),
+  });
+  if (!parsed.success) return { message: parsed.error.issues[0].message };
+
+  const supabase = await createClient();
+
+  // check the current password before allowing the change
+  const { error: verifyError } = await supabase.auth.signInWithPassword({
+    email,
+    password: parsed.data.currentPassword,
+  });
+  if (verifyError) return { message: "Current password is incorrect." };
+
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.newPassword,
+  });
+  if (error) return { message: "Could not change your password. Try again." };
+
+  return { message: "Password changed.", success: true };
+}
+
+export async function signOutOtherDevices(
+  _prev: AuthState,
+  _form: FormData,
+): Promise<AuthState> {
+  await verifyUser();
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signOut({ scope: "others" });
+  if (error) return { message: "Could not sign out other devices. Try again." };
+
+  return { message: "Signed out of all other devices.", success: true };
 }
