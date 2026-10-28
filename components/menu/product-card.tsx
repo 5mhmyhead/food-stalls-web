@@ -7,7 +7,10 @@ import {
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
+
 import type { Category, Product } from "@/lib/mock-data";
+import { getPricing, getStockStatus, peso } from "@/lib/product-utils";
+import Link from "next/link";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   CookingPot,
@@ -17,27 +20,17 @@ const ICON_MAP: Record<string, LucideIcon> = {
   CupSoda,
 };
 
-const LOW_STOCK = 5;
-
-const peso = new Intl.NumberFormat("en-PH", {
-  style: "currency",
-  currency: "PHP",
-});
-
 export default function ProductCard({
   product,
   category,
+  selected = false,
 }: {
   product: Product;
   category?: Category;
+  selected?: boolean;
 }) {
-  const price = Number(product.price);
-  const discount = Number(product.discount ?? 0);
-  const finalPrice = price * (1 - discount / 100);
-
-  const soldOut = product.stock === 0;
-  const unavailable = !product.availability || soldOut;
-  const lowStock = !soldOut && product.stock <= LOW_STOCK;
+  const { price, discount, finalPrice } = getPricing(product);
+  const { soldOut, unavailable, lowStock } = getStockStatus(product);
 
   const theme = unavailable
     ? {
@@ -60,6 +53,10 @@ export default function ProductCard({
   const CategoryIcon = (category?.icon ? ICON_MAP[category.icon] : null) ?? UtensilsCrossed;
 
   return (
+    <Link
+      href={`/menu?item=${product.id}`}
+      className="flex"
+    >
     <article
       className={`group flex flex-col overflow-hidden rounded-3xl bg-surface-container border-2 border-transparent transition-all duration-300 ${theme.borderHover} ${
         unavailable ? "opacity-70" : ""
@@ -114,5 +111,6 @@ export default function ProductCard({
         </div>
       </div>
     </article>
+    </Link>
   );
 }
