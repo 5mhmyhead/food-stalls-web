@@ -3,6 +3,15 @@ import type { categories, products } from "@/db/schema";
 export type Category = typeof categories.$inferSelect;
 export type Product = typeof products.$inferSelect;
 
+export interface CartItem {
+  id: number;
+  name: string;
+  categoryName: string;
+  quantity: number;
+  price: number;
+  originalPrice?: number;
+}
+
 const OWNER = "dwyanesido";
 
 export const mockCategories: Category[] = [
@@ -24,4 +33,10 @@ export const mockProducts: Product[] = [
   { id: 8, categoryId: 4, name: "Lumpiang Shanghai", description: "Crispy spring rolls with sweet chili sauce.", price: "85.00", stock: 3, discount: "5.00", availability: true, imageUrl: null },
   { id: 9, categoryId: 5, name: "Brown Sugar Milk Tea", description: "Classic milk tea with tapioca pearls.", price: "110.00", stock: 50, discount: null, availability: true, imageUrl: null },
   { id: 10, categoryId: 5, name: "Iced Matcha Latte", description: "Ceremonial matcha over milk and ice.", price: "130.00", stock: 0, discount: null, availability: false, imageUrl: null },
+];
+
+export const mockCartItems: CartItem[] = [
+  { id: 1, name: "Light Espresso", categoryName: "Drinks", quantity: 2, price: 400 },
+  { id: 2, name: "Hash Browns", categoryName: "Breakfast", quantity: 1, price: 310 },
+  { id: 3, name: "Matcha Tea", categoryName: "Drinks", quantity: 2, price: 210, originalPrice: 250 },
 ];

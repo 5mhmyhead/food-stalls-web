@@ -1,4 +1,4 @@
-import MenuToolbar from "@/components/menu/menu-toolbar";
+import MenuToolbar from "@/components/menu-toolbar";
 import ProductCard from "@/components/menu/product-card";
 import ProductDetails from "@/components/menu/product-details";
 import DetailsPanel from "@/components/menu/details-panel";
@@ -14,10 +14,10 @@ export default async function MenuPage({
   const selected = mockProducts.find((p) => p.id === Number(item));
 
   return (
-    <section className="h-full w-full rounded-3xl overflow-auto">
+    <section className="h-full w-full rounded-3xl overflow-auto flex flex-col gap-6">
       <h1 className="font-serif font-black text-6xl">Menu</h1>
 
-      <div className="flex flex-col gap-6 pt-6">
+      <div className="flex flex-col gap-6">
         <div className="w-full rounded-3xl bg-surface p-6">
           <MenuToolbar categories={mockCategories} products={mockProducts} />
         </div>
@@ -32,7 +32,6 @@ export default async function MenuPage({
         )}
    
         <div className="w-full rounded-3xl bg-surface p-6">
-
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {mockProducts.map((product) => (
               <ProductCard

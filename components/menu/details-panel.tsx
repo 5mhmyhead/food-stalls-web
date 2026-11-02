@@ -70,7 +70,6 @@ export function CloseButton() {
     <button
       type="button"
       onClick={panel?.close}
-      aria-label="Close details"
       className="rounded-full p-2 text-muted transition-colors hover:text-primary"
     >
       <X size={20} />
