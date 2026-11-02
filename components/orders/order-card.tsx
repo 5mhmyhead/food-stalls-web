@@ -28,7 +28,7 @@ export default function OrderCard({
 
   return (
     <article
-      className={`group flex flex-col overflow-hidden rounded-3xl bg-surface-container border-2 border-transparent transition-all duration-300 ${
+      className={`group flex flex-col overflow-hidden rounded-2xl bg-surface-container border-2 border-transparent transition-all duration-300 ${
         theme.borderHover
       } ${unavailable ? "opacity-70" : ""}`}
     >

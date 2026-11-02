@@ -14,8 +14,8 @@ export default function OrdersPage() {
     <section className="flex h-full w-full flex-col gap-6 overflow-hidden">
       <h1 className="shrink-0 font-serif text-6xl font-black">Orders</h1>
 
-      <div className="flex flex-1 min-h-0 gap-6">
-        <div className="flex flex-4 min-h-0 flex-col gap-6">
+      <div className="flex min-h-0 gap-6">
+        <div className="flex flex-1 min-h-0 flex-col gap-6">
           <div className="shrink-0 rounded-3xl bg-surface p-6">
             <MenuToolbar
               categories={mockCategories}
@@ -41,7 +41,7 @@ export default function OrdersPage() {
           </div>
         </div>
 
-        <div className="flex flex-4 min-h-0">
+        <div className="flex flex-1 min-h-0">
           <CartDetails />
         </div>
       </div>

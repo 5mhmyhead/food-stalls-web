@@ -1,7 +1,8 @@
-import type { categories, products } from "@/db/schema";
+import type { categories, products, orders } from "@/db/schema";
 
 export type Category = typeof categories.$inferSelect;
 export type Product = typeof products.$inferSelect;
+export type Order = typeof orders.$inferSelect;
 
 export interface CartItem {
   id: number;
@@ -10,6 +11,14 @@ export interface CartItem {
   quantity: number;
   price: number;
   originalPrice?: number;
+}
+
+export interface OrderHistoryItem {
+  id: number;
+  order: Order;
+  totalAmount: number;
+  itemCount: number;
+  itemImages: string[];
 }
 
 const OWNER = "dwyanesido";
@@ -39,4 +48,11 @@ export const mockCartItems: CartItem[] = [
   { id: 1, name: "Light Espresso", categoryName: "Drinks", quantity: 2, price: 400 },
   { id: 2, name: "Hash Browns", categoryName: "Breakfast", quantity: 1, price: 310 },
   { id: 3, name: "Matcha Tea", categoryName: "Drinks", quantity: 2, price: 210, originalPrice: 250 },
+];
+
+export const mockOrderHistory: OrderHistoryItem[] = [
+  { id: 82923, order: { id: 82923, employeeId: "d9b23f80-7b5c-4e89-a2e1-88f1c324901a", customerId: null, status: "PENDING", orderedAt: new Date("2026-10-12T10:30:00Z") }, totalAmount: 920.0, itemCount: 3, itemImages: ["/mock/chocolate-drinks.jpg", "/mock/tapsilog.jpg"] },
+  { id: 45239, order: { id: 45239, employeeId: "d9b23f80-7b5c-4e89-a2e1-88f1c324901a", customerId: null, status: "CANCELLED", orderedAt: new Date("2026-10-10T14:15:00Z") }, totalAmount: 220.0, itemCount: 1, itemImages: ["/mock/hash-browns-bacon.jpg"] },
+  { id: 9752, order: { id: 9752, employeeId: "d9b23f80-7b5c-4e89-a2e1-88f1c324901a", customerId: null, status: "COMPLETED", orderedAt: new Date("2026-09-29T16:45:00Z") }, totalAmount: 120.0, itemCount: 1, itemImages: ["/mock/iced-matcha.jpg"] },
+  { id: 61840, order: { id: 61840, employeeId: "d9b23f80-7b5c-4e89-a2e1-88f1c324901a", customerId: null, status: "COMPLETED", orderedAt: new Date("2026-09-15T11:20:00Z") }, totalAmount: 1450.0, itemCount: 5, itemImages: ["/mock/chocolate-drinks.jpg", "/mock/tapsilog.jpg", "/mock/hash-browns-bacon.jpg", "/mock/iced-matcha.jpg", "/mock/pancakes.jpg"] },
 ];
