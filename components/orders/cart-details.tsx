@@ -23,45 +23,47 @@ export default function CartDetails({
 
   return (
     <aside className="flex h-full w-full flex-col gap-6 overflow-hidden rounded-3xl bg-surface p-6">
-      <div className="shrink-0 flex rounded-2xl bg-surface-container">
-        <button
-          type="button"
-          className="flex-1 rounded-2xl bg-primary py-3 text-center font-bold text-background"
-        >
-          Dine In
-        </button>
-        <button
-          type="button"
-          className="flex-1 rounded-2xl py-3 text-center font-bold text-muted transition-colors hover:text-primary"
-        >
-          Take Out
-        </button>
-        <button
-          type="button"
-          className="flex-1 rounded-2xl py-3 text-center font-bold text-muted transition-colors hover:text-primary"
-        >
-          Delivery
-        </button>
-      </div>
+      <div className="flex flex-col gap-3">
+        <div className="shrink-0 flex rounded-2xl bg-surface-container">
+          <button
+            type="button"
+            className="flex-1 rounded-2xl bg-primary py-3 text-center font-bold text-background"
+          >
+            Dine In
+          </button>
+          <button
+            type="button"
+            className="flex-1 rounded-2xl py-3 text-center font-bold text-muted transition-colors hover:text-primary"
+          >
+            Take Out
+          </button>
+          <button
+            type="button"
+            className="flex-1 rounded-2xl py-3 text-center font-bold text-muted transition-colors hover:text-primary"
+          >
+            Delivery
+          </button>
+        </div>
 
-      <div className="shrink-0 flex items-center justify-between rounded-2xl bg-surface-container p-4">
-        <div className="flex flex-col justify-center text-start">
-          <p className="font-bold text-muted">Order ID</p>
-          <p className="font-bold text-onSurface">{orderId}</p>
-        </div>
-        <div className="flex flex-col justify-center text-center">
-          <p className="font-bold text-muted">Order Date</p>
-          <p className="font-bold text-onSurface">{orderDate}</p>
-        </div>
-        <div className="flex flex-col justify-center text-end">
-          <p className="font-bold text-muted">Cashier</p>
-          <p className="font-bold text-onSurface">{cashier}</p>
+        <div className="shrink-0 flex items-center justify-between rounded-2xl bg-surface-container p-4">
+          <div className="flex flex-col justify-center text-start">
+            <p className="font-bold text-muted">Order ID</p>
+            <p className="font-bold text-onSurface">{orderId}</p>
+          </div>
+          <div className="flex flex-col justify-center text-center">
+            <p className="font-bold text-muted">Order Date</p>
+            <p className="font-bold text-onSurface">{orderDate}</p>
+          </div>
+          <div className="flex flex-col justify-center text-end">
+            <p className="font-bold text-muted">Cashier</p>
+            <p className="font-bold text-onSurface">{cashier}</p>
+          </div>
         </div>
       </div>
 
       <h2 className="font-serif text-4xl font-bold">Order Details</h2>
 
-      <div className="flex flex-1 min-h-0 flex-col gap-3 overflow-y-auto">
+      <div className="flex flex-1 min-h-0 flex-col gap-3 overflow-y-auto rounded-2xl">
         {items.length === 0 ? (
           <div className="flex h-full items-center justify-center text-muted">
             No items in order
@@ -96,7 +98,7 @@ export default function CartDetails({
         )}
       </div>
 
-      <div className="mt-auto shrink-0 flex flex-col gap-4 rounded-3xl bg-surface-container p-4">
+      <div className="mt-auto shrink-0 flex flex-col gap-4 rounded-2xl bg-surface-container p-4">
         <div className="flex flex-col gap-1 font-semibold">
           <div className="flex justify-between">
             <span className="text-muted">Price</span>

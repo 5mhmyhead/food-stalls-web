@@ -74,7 +74,7 @@ export default function HistoryDetails({
 
       <h2 className="font-serif text-4xl font-bold">Order Details</h2>
 
-      <div className="flex flex-1 min-h-0 flex-col gap-3 overflow-y-auto">
+      <div className="flex flex-1 min-h-0 flex-col gap-3 overflow-y-auto rounded-2xl">
         {items.length === 0 ? (
           <div className="flex h-full items-center justify-center text-muted">
             No items in order
@@ -109,7 +109,7 @@ export default function HistoryDetails({
         )}
       </div>
 
-      <div className="mt-auto shrink-0 flex flex-col gap-4 rounded-3xl bg-surface-container p-4">
+      <div className="mt-auto shrink-0 flex flex-col gap-4 rounded-2xl bg-surface-container p-4">
         <div className="flex flex-col gap-1 font-semibold">
           <div className="flex justify-between">
             <span className="text-muted">Price</span>

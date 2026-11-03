@@ -21,6 +21,14 @@ export interface OrderHistoryItem {
   itemImages: string[];
 }
 
+export type TimeRange = "daily" | "weekly" | "monthly" | "all-time";
+
+export interface AnalyticsMetric {
+  revenue: string;
+  productsSold: number;
+  customers: number;
+}
+
 const OWNER = "dwyanesido";
 
 export const mockCategories: Category[] = [
@@ -56,3 +64,10 @@ export const mockOrderHistory: OrderHistoryItem[] = [
   { id: 9752, order: { id: 9752, employeeId: "d9b23f80-7b5c-4e89-a2e1-88f1c324901a", customerId: null, status: "COMPLETED", orderedAt: new Date("2026-09-29T16:45:00Z") }, totalAmount: 120.0, itemCount: 1, itemImages: ["/mock/iced-matcha.jpg"] },
   { id: 61840, order: { id: 61840, employeeId: "d9b23f80-7b5c-4e89-a2e1-88f1c324901a", customerId: null, status: "COMPLETED", orderedAt: new Date("2026-09-15T11:20:00Z") }, totalAmount: 1450.0, itemCount: 5, itemImages: ["/mock/chocolate-drinks.jpg", "/mock/tapsilog.jpg", "/mock/hash-browns-bacon.jpg", "/mock/iced-matcha.jpg", "/mock/pancakes.jpg"] },
 ];
+
+export const mockAnalyticsData: Record<TimeRange, AnalyticsMetric> = {
+  daily: { revenue: "₱420.00", productsSold: 18, customers: 12 },
+  weekly: { revenue: "₱2,840.00", productsSold: 124, customers: 85 },
+  monthly: { revenue: "₱11,250.00", productsSold: 540, customers: 310 },
+  "all-time": { revenue: "₱48,920.00", productsSold: 2150, customers: 142 },
+};
