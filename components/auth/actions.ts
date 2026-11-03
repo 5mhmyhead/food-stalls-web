@@ -1,5 +1,5 @@
 "use server";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { createClient } from "@/utils/supabase/server";
@@ -120,6 +120,13 @@ export async function updatePassword(
   _prev: AuthState,
   form: FormData,
 ): Promise<AuthState> {
+  const cookieStore = await cookies();
+  if (cookieStore.get("pw_recovery")?.value !== "1") {
+    return {
+      message: "This reset link is no longer valid. Request a new one.",
+    };
+  }
+
   const parsed = ResetPasswordSchema.safeParse({
     password: form.get("password"),
     confirmPassword: form.get("confirmPassword"),
@@ -137,6 +144,7 @@ export async function updatePassword(
     };
   }
 
+  cookieStore.delete("pw_recovery");
   redirect("/home");
 }
 export async function changePassword(
