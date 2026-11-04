@@ -7,7 +7,7 @@ import { TimeRangeSelect } from "@/components/home/time-range-select";
 import { AnalyticsCard } from "@/components/home/analytics-card";
 
 const TIME_RANGE_PREFIXES: Record<TimeRange, string> = {
-  daily: "Today",
+  daily: "Daily",
   weekly: "This Week",
   monthly: "This Month",
   "all-time": "All Time",

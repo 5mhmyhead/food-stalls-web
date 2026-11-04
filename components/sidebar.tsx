@@ -73,18 +73,24 @@ export function Sidebar({ username }: { username: string }) {
 
   return (
     <nav className="h-full w-80 shrink-0 text-background">
-      <div className="flex h-full flex-col justify-between rounded-3xl bg-primary p-6">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-center justify-center gap-1 pb-4">
-            <Image src="/logo-white.svg" alt="logo" width={36} height={36} />
-            <h1 className="font-serif text-3xl font-black tracking-wide">
-              Kawaii Count
-            </h1>
-            <p className="text-sm">Welcome back, {username}!</p>
+      <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-primary p-6">
+        <div className="pointer-events-none absolute -top-20 -right-12 size-72 rounded-full bg-linear-to-b from-background/30 to-transparent" />
+        <div className="pointer-events-none absolute -bottom-16 -left-12 size-64 rounded-full bg-linear-to-t from-background/30 to-transparent" />
+        <div className="pointer-events-none absolute bottom-36 left-48 size-36 rounded-full bg-linear-to-t from-background/30 to-transparent" />
+
+        <div className="relative z-10 flex h-full flex-col justify-between">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col items-center justify-center gap-1 pb-4">
+              <Image src="/logo-white.svg" alt="logo" width={36} height={36} />
+              <h1 className="font-serif text-3xl font-black tracking-wide">
+                Kawaii Count
+              </h1>
+              <p className="text-sm">Welcome back, {username}!</p>
+            </div>
+            {renderNavLinks(TOP_NAV_ITEMS)}
           </div>
-          {renderNavLinks(TOP_NAV_ITEMS)}
+          {renderNavLinks(BOTTOM_NAV_ITEMS)}
         </div>
-        {renderNavLinks(BOTTOM_NAV_ITEMS)}
       </div>
     </nav>
   );

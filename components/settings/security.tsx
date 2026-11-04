@@ -76,7 +76,7 @@ export default function Security() {
         </div>
         {soState?.message && (
           <p
-            className={`text-sm ${soState.success ? "text-green-700" : "text-red-600"}`}
+            className="text-primary"
             role="status"
           >
             {soState.message}
