@@ -56,3 +56,29 @@ export const ResetPasswordSchema = z
     error: "Passwords do not match.",
     path: ["confirmPassword"],
   });
+
+export const ChangePasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(1, { error: "Enter your current password." }),
+    newPassword: z
+      .string()
+      .min(8, { error: "Password needs at least 8 characters." })
+      .regex(/[a-z]/, { error: "Password needs a lowercase letter." })
+      .regex(/[A-Z]/, { error: "Password needs an uppercase letter." })
+      .regex(/\d/, { error: "Password needs a number." }),
+  })
+  .refine((d) => d.currentPassword !== d.newPassword, {
+    error: "New password must be different from the current one.",
+    path: ["newPassword"],
+  });
+
+export const UpdateProfileSchema = z.object({
+  username,
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .pipe(z.email({ error: "Enter a valid email address." })),
+});

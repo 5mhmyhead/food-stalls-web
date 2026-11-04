@@ -30,9 +30,9 @@ export const profiles = pgTable("profiles", {
 
 export const categories = pgTable("categories", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  createdBy: uuid("created_by")
-    .notNull()
-    .references(() => profiles.id),
+  createdBy: uuid("created_by").references(() => profiles.id, {
+    onDelete: "set null",
+  }),
   name: text("name").notNull(),
   icon: text("icon").notNull(),
 }).enableRLS();
@@ -53,9 +53,9 @@ export const products = pgTable("products", {
 
 export const orders = pgTable("orders", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  employeeId: uuid("employee_id")
-    .notNull()
-    .references(() => profiles.id),
+  employeeId: uuid("employee_id").references(() => profiles.id, {
+    onDelete: "set null",
+  }),
   customerId: integer("customer_id"),
   status: orderStatus("status").notNull().default("PENDING"),
   orderedAt: timestamp("ordered_at").notNull().defaultNow(),

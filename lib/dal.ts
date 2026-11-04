@@ -10,7 +10,7 @@ export const verifyUser = cache(async () => {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("username, account_type")
+    .select("username, email, account_type")
     .eq("id", data.claims.sub)
     .single();
   if (!profile) redirect("/");
@@ -18,12 +18,13 @@ export const verifyUser = cache(async () => {
   return {
     userId: data.claims.sub,
     username: profile.username as string,
+    email: profile.email as string,
     role: profile.account_type as "WORKER" | "ADMIN",
   };
 });
 
 export const verifyAdmin = cache(async () => {
   const user = await verifyUser();
-  if (user.role !== "ADMIN") redirect("/home"); //will change this later
+  if (user.role !== "ADMIN") redirect("/home");
   return user;
 });

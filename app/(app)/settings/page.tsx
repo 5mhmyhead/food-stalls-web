@@ -3,10 +3,10 @@ import AccountDetails from "@/components/settings/account-details";
 import Security from "@/components/settings/security";
 import AccountDeletion from "@/components/settings/account-deletion";
 import Preferences from "@/components/settings/preferences";
+import { verifyUser } from "@/lib/dal";
 
 export default async function SettingsPage() {
-  // mock profile data
-  const user = { username: "dwyanesido", email: "moonlight.sido@gmail.com", accountType: "admin" };
+  const user = await verifyUser();
 
   return (
     <section className="h-full w-full rounded-3xl overflow-auto">
@@ -16,13 +16,13 @@ export default async function SettingsPage() {
           <AccountDetails username={user.username} email={user.email} />
         </SettingsSection>
         <SettingsSection title="Security">
-          <Security/>
+          <Security />
         </SettingsSection>
         <SettingsSection title="Preferences">
-          <Preferences isManager={user.accountType === "admin"} />
+          <Preferences isManager={user.role === "ADMIN"} />
         </SettingsSection>
         <SettingsSection title="Account Deletion">
-          <AccountDeletion/>
+          <AccountDeletion />
         </SettingsSection>
       </div>
     </section>
