@@ -36,6 +36,27 @@
       "when": 1792993929342,
       "tag": "0004_rls-policies",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793753058011,
+      "tag": "0005_sync-profile-email",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793754067193,
+      "tag": "0006_keep-history-on-delete",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793754076238,
+      "tag": "0007_delete-own-account",
+      "breakpoints": true
     }
   ]
 }

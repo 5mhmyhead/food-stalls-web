@@ -72,3 +72,12 @@ export const ChangePasswordSchema = z
     error: "New password must be different from the current one.",
     path: ["newPassword"],
   });
+
+export const UpdateProfileSchema = z.object({
+  username,
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .pipe(z.email({ error: "Enter a valid email address." })),
+});
