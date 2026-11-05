@@ -27,6 +27,8 @@ export interface AnalyticsMetric {
   revenue: string;
   productsSold: number;
   customers: number;
+  topProduct: { name: string; salesCount: number };
+  lowestProduct: { name: string; salesCount: number };
 }
 
 const OWNER = "dwyanesido";
@@ -66,8 +68,8 @@ export const mockOrderHistory: OrderHistoryItem[] = [
 ];
 
 export const mockAnalyticsData: Record<TimeRange, AnalyticsMetric> = {
-  daily: { revenue: "₱420.00", productsSold: 18, customers: 12 },
-  weekly: { revenue: "₱2,840.00", productsSold: 124, customers: 85 },
-  monthly: { revenue: "₱11,250.00", productsSold: 540, customers: 310 },
-  "all-time": { revenue: "₱48,920.00", productsSold: 2150, customers: 142 },
+  daily: { revenue: "₱420.00", productsSold: 18, customers: 12, topProduct: { name: "Tapsilog", salesCount: 8 }, lowestProduct: { name: "Kare-Kare", salesCount: 0 } },
+  weekly: { revenue: "₱2,840.00", productsSold: 124, customers: 85, topProduct: { name: "Brown Sugar Milk Tea", salesCount: 42 }, lowestProduct: { name: "Sinigang na Baboy", salesCount: 3 } },
+  monthly: { revenue: "₱11,250.00", productsSold: 540, customers: 310, topProduct: { name: "Matcha Tea", salesCount: 136 }, lowestProduct: { name: "Sinigang na Baboy", salesCount: 12 } },
+  "all-time": { revenue: "₱48,920.00", productsSold: 2150, customers: 142, topProduct: { name: "Tapsilog", salesCount: 520 }, lowestProduct: { name: "Iced Matcha Latte", salesCount: 15 } },
 };

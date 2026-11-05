@@ -28,7 +28,6 @@ export default function Select({
   );
   const selected = options[selectedIndex];
 
-  // close when clicking outside
   useEffect(() => {
     function onMouseDown(e: MouseEvent) {
       if (!ref.current?.contains(e.target as Node)) setOpen(false);
@@ -94,7 +93,7 @@ export default function Select({
         <ul
           id={listId}
           role="listbox"
-          className="absolute right-0 z-20 mt-2 w-full overflow-hidden rounded-xl border-2 border-primary bg-surface p-1 shadow-lg"
+          className="absolute right-0 z-20 mt-2 w-full overflow-hidden rounded-xl border-2 border-primary bg-surface p-1"
         >
           {options.map((o, i) => (
             <li

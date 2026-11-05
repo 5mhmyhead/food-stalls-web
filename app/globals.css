@@ -49,5 +49,9 @@
 }
 
 @utility btn-secondary {
-  @apply px-6 py-3 rounded-xl bg-surface-container text-onSurface cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50; 
+  @apply px-6 py-3 rounded-xl bg-secondary font-bold text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50; 
+}
+
+@utility btn-muted {
+  @apply px-6 py-3 rounded-xl bg-muted/20  text-onSurface cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50; 
 }

@@ -62,7 +62,7 @@ export default function AccountDeletion() {
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              className="btn-secondary"
+              className="btn-muted"
             >
               Cancel
             </button>

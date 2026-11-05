@@ -13,7 +13,7 @@ export function TimeRangeSelect({ value, onChange }: TimeRangeSelectProps) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as TimeRange)}
-        className="w-full cursor-pointer appearance-none rounded-2xl bg-surface px-5 py-3 pr-10 text-sm font-semibold capitalize transition-colors hover:bg-surface/80 focus:outline-none"
+        className="cursor-pointer appearance-none rounded-2xl bg-surface px-5 py-3 pr-10 text-sm font-semibold capitalize transition-colors hover:bg-surface/80 focus:outline-none"
       >
         <option value="daily">Daily</option>
         <option value="weekly">Weekly</option>

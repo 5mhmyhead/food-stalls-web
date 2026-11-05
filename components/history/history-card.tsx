@@ -56,7 +56,7 @@ export default function HistoryCard({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className={`flex size-14 shrink-0 items-center justify-center rounded-full ${statusConfig.badgeBg}`}>
-            <StatusIcon size={28} />
+            <StatusIcon size={28} className="stroke-[2.5]" />
           </div>
           <div>
             <h3 className="text-2xl font-semibold leading-tight">
