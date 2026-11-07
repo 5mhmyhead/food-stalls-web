@@ -79,11 +79,11 @@ export default function CategoryChart({
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
             {totalProductsSold !== undefined && (
               <>
-                <span className="text-2xl font-black text-onSurface">
+                <span className="text-3xl font-bold text-onSurface">
                   {totalProductsSold}
                 </span>
-                <span className="text-sm font-medium text-muted">items sold</span>
-              </>
+                <span className="font-medium text-muted">items sold</span>
+              </> 
             )}
           </div>
         </div>
