@@ -14,7 +14,7 @@ export default function AccountDetails({
   const [state, action, pending] = useActionState(updateProfile, undefined);
 
   return (
-    <form className="flex flex-col gap-6" action={action}>
+    <form className="flex flex-col gap-4" action={action}>
       <div className="grid gap-4 grid-cols-2">
         <TextField
           id="username"
@@ -35,7 +35,7 @@ export default function AccountDetails({
 
       {state?.message && (
         <p
-          className={`text-sm ${state.success ? "text-green-700" : "text-red-600"}`}
+          className="text-primary"
           role="status"
         >
           {state.message}

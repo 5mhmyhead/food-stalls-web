@@ -16,7 +16,7 @@ export default function PendingDetailsCard({
   const totalDiscount = subtotal - finalTotal;
 
   return (
-    <aside className="flex h-full w-full flex-col gap-6 overflow-hidden rounded-3xl bg-surface p-6">
+    <aside className="flex h-full w-full flex-col gap-4 overflow-hidden rounded-3xl bg-surface p-6">
       <h2 className="font-serif text-4xl font-bold">Order Details</h2>
 
       <div className="flex flex-1 min-h-0 flex-col gap-3 overflow-y-auto rounded-2xl">

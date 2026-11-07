@@ -72,8 +72,6 @@ export default function ProductCard({
 
       <div className="relative flex w-40 shrink-0 items-center justify-center bg-background sm:w-48">
         <CategoryIcon className="size-16 text-muted/50 transition-colors duration-300 group-hover:text-muted" />
-
-        {/* BADGES */}
         {discount > 0 && (
           <span
             className={`absolute left-3 top-3 rounded-xl px-2.5 py-1 text-xs font-semibold text-background ${theme.badgeBg}`}

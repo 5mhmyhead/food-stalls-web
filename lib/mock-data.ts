@@ -23,12 +23,24 @@ export interface OrderHistoryItem {
 
 export type TimeRange = "daily" | "weekly" | "monthly" | "all-time";
 
+export interface RevenueBreakdownItem {
+  name: string;
+  amount: number;
+}
+
+export interface CategoryBreakdownItem {
+  name: string;
+  value: number;
+}
+
 export interface AnalyticsMetric {
   revenue: string;
   productsSold: number;
   customers: number;
   topProduct: { name: string; salesCount: number };
   lowestProduct: { name: string; salesCount: number };
+  incomeBreakdown: RevenueBreakdownItem[];
+  categoryBreakdown: CategoryBreakdownItem[];
 }
 
 const OWNER = "dwyanesido";
@@ -68,8 +80,83 @@ export const mockOrderHistory: OrderHistoryItem[] = [
 ];
 
 export const mockAnalyticsData: Record<TimeRange, AnalyticsMetric> = {
-  daily: { revenue: "₱420.00", productsSold: 18, customers: 12, topProduct: { name: "Tapsilog", salesCount: 8 }, lowestProduct: { name: "Kare-Kare", salesCount: 0 } },
-  weekly: { revenue: "₱2,840.00", productsSold: 124, customers: 85, topProduct: { name: "Brown Sugar Milk Tea", salesCount: 42 }, lowestProduct: { name: "Sinigang na Baboy", salesCount: 3 } },
-  monthly: { revenue: "₱11,250.00", productsSold: 540, customers: 310, topProduct: { name: "Matcha Tea", salesCount: 136 }, lowestProduct: { name: "Sinigang na Baboy", salesCount: 12 } },
-  "all-time": { revenue: "₱48,920.00", productsSold: 2150, customers: 142, topProduct: { name: "Tapsilog", salesCount: 520 }, lowestProduct: { name: "Iced Matcha Latte", salesCount: 15 } },
+  daily: {
+    revenue: "₱501.50",
+    productsSold: 18,
+    customers: 12,
+    topProduct: { name: "Matcha Tea", salesCount: 8 },
+    lowestProduct: { name: "Hash Browns", salesCount: 1 },
+    incomeBreakdown: [
+      { name: "Matcha Tea", amount: 255.75 },
+      { name: "Hot Chocolate", amount: 150.45 },
+      { name: "Light Espresso", amount: 60.18 },
+      { name: "Hash Browns", amount: 35.12 },
+    ],
+    categoryBreakdown: [
+      { name: "Drinks", value: 45 },
+      { name: "Breakfast", value: 25 },
+      { name: "Lunch", value: 18 },
+      { name: "Appetizer", value: 12 },
+    ],
+  },
+  weekly: {
+    revenue: "₱2,840.00",
+    productsSold: 124,
+    customers: 85,
+    topProduct: { name: "Brown Sugar Milk Tea", salesCount: 42 },
+    lowestProduct: { name: "Chicken Katsu Bento", salesCount: 3 },
+    incomeBreakdown: [
+      { name: "Brown Sugar Milk Tea", amount: 1136.00 },
+      { name: "Tapsilog", amount: 994.00 },
+      { name: "Gyoza", amount: 426.00 },
+      { name: "Pancake Stack", amount: 184.00 },
+      { name: "Chicken Katsu Bento", amount: 100.00 },
+    ],
+    categoryBreakdown: [
+      { name: "Drinks", value: 40 },
+      { name: "Breakfast", value: 30 },
+      { name: "Lunch", value: 20 },
+      { name: "Dinner", value: 10 },
+    ],
+  },
+  monthly: {
+    revenue: "₱11,250.00",
+    productsSold: 540,
+    customers: 310,
+    topProduct: { name: "Matcha Tea", salesCount: 136 },
+    lowestProduct: { name: "Beef Tapa Bowl", salesCount: 12 },
+    incomeBreakdown: [
+      { name: "Matcha Tea", amount: 4500.00 },
+      { name: "Tapsilog", amount: 2812.50 },
+      { name: "Brown Sugar Milk Tea", amount: 2025.00 },
+      { name: "Pancake Stack", amount: 1350.00 },
+      { name: "Beef Tapa Bowl", amount: 562.50 },
+    ],
+    categoryBreakdown: [
+      { name: "Drinks", value: 35 },
+      { name: "Lunch", value: 30 },
+      { name: "Breakfast", value: 20 },
+      { name: "Dinner", value: 15 },
+    ],
+  },
+  "all-time": {
+    revenue: "₱48,920.00",
+    productsSold: 2150,
+    customers: 142,
+    topProduct: { name: "Tapsilog", salesCount: 520 },
+    lowestProduct: { name: "Lumpiang Shanghai", salesCount: 15 },
+    incomeBreakdown: [
+      { name: "Tapsilog", amount: 24460.00 },
+      { name: "Brown Sugar Milk Tea", amount: 12230.00 },
+      { name: "Chicken Katsu Bento", amount: 7338.00 },
+      { name: "Lumpiang Shanghai", amount: 2935.20 },
+      { name: "Pancake Stack", amount: 1956.80 },
+    ],
+    categoryBreakdown: [
+      { name: "Breakfast", value: 40 },
+      { name: "Drinks", value: 30 },
+      { name: "Lunch", value: 20 },
+      { name: "Dinner", value: 10 },
+    ],
+  },
 };

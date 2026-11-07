@@ -45,7 +45,7 @@ export default function Security() {
 
         {pwState?.message && (
           <p
-            className={`text-sm ${pwState.success ? "text-green-700" : "text-red-600"}`}
+            className="text-primary"
             role="status"
           >
             {pwState.message}

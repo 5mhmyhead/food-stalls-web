@@ -22,7 +22,7 @@ export default function CartDetails({
   const totalDiscount = subtotal - finalTotal;
 
   return (
-    <aside className="flex h-full w-full flex-col gap-6 overflow-hidden rounded-3xl bg-surface p-6">
+    <aside className="flex h-full w-full flex-col gap-4 overflow-hidden rounded-3xl bg-surface p-6">
       <div className="flex flex-col gap-3">
         <div className="shrink-0 flex rounded-2xl bg-surface-container">
           <button
