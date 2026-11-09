@@ -16,7 +16,7 @@ export default async function SettingsPage() {
           <AccountDetails
             username={user.username}
             email={user.email}
-            role={user.role}
+            accountType={user.role}
           />
         </SettingsSection>
         <SettingsSection title="Security">

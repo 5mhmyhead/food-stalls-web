@@ -178,7 +178,6 @@ export async function changePassword(
 
   const supabase = await createClient();
 
-  // check the current password before allowing the change
   const { error: verifyError } = await supabase.auth.signInWithPassword({
     email,
     password: parsed.data.currentPassword,
@@ -221,7 +220,6 @@ export async function updateProfile(
 
   const notes: string[] = [];
 
-  // username: saved right away
   if (parsed.data.username !== user.username) {
     const [taken] = await db
       .select({ id: profiles.id })
@@ -245,7 +243,6 @@ export async function updateProfile(
     notes.push("Username updated.");
   }
 
-  // email: Supabase sends confirmation links first
   if (parsed.data.email !== user.email.toLowerCase()) {
     const origin = (await headers()).get("origin") ?? "http://localhost:3000";
     const supabase = await createClient();
@@ -271,7 +268,7 @@ export async function updateProfile(
     return { message: "No changes to save.", username, email };
   }
 
-  revalidatePath("/", "layout"); // refreshes the sidebar's "Welcome back"
+  revalidatePath("/", "layout");
   return {
     message: notes.join(" "),
     username: parsed.data.username,
@@ -291,7 +288,6 @@ export async function deleteAccount(
 
   const supabase = await createClient();
 
-  // re-check the password so a tablet left signed in can't be wiped
   const { error: verifyError } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -315,7 +311,6 @@ const MAX_ATTEMPTS = 5;
 const WINDOW_MINUTES = 15;
 
 function codesMatch(a: string, b: string) {
-  // hashing first makes both values the same length for a constant-time compare
   const ha = createHash("sha256").update(a).digest();
   const hb = createHash("sha256").update(b).digest();
   return timingSafeEqual(ha, hb);
