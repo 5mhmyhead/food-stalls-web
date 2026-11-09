@@ -4,7 +4,11 @@ import { useActionState } from "react";
 import TextField from "../text-field";
 import { changePassword, signOutOtherDevices } from "@/components/auth/actions";
 
-export default function Security() {
+interface SecurityProps {
+  accountType?: "WORKER" | "ADMIN";
+}
+
+export default function Security({ accountType = "WORKER" }: SecurityProps) {
   const [pwState, pwAction, pwPending] = useActionState(
     changePassword,
     undefined,
@@ -17,14 +21,14 @@ export default function Security() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-xl font-serif font-bold">Change Password</h2>
+        <h2 className="font-serif text-xl font-bold">Change Password</h2>
         <p className="text-muted">
           Your new password should contain at least 8 characters, a capital
           letter, and a number.
         </p>
       </div>
       <form className="flex flex-col gap-4" action={pwAction}>
-        <div className="grid gap-4 grid-cols-2">
+        <div className="grid grid-cols-2 gap-4">
           <TextField
             id="currentPassword"
             name="currentPassword"
@@ -44,10 +48,7 @@ export default function Security() {
         </div>
 
         {pwState?.message && (
-          <p
-            className="text-primary"
-            role="status"
-          >
+          <p className="text-primary" role="status">
             {pwState.message}
           </p>
         )}
@@ -59,38 +60,42 @@ export default function Security() {
         </div>
       </form>
 
+      {accountType === "ADMIN" && (
+        <>
+          <hr className="border-t-2 border-background" />
+
+          <form className="flex flex-col gap-4" action="">
+            <div>
+              <h2 className="font-serif text-xl font-bold">Admin Access Code</h2>
+              <p className="text-muted">
+                Update the access code for workers to upgrade their account to admin.
+              </p>
+            </div>
+
+            <TextField
+              id="staffCode"
+              name="staffCode"
+              label="Staff access code"
+              autoComplete="off"
+              spellCheck={false}
+              required
+            />
+
+            <div className="flex items-center gap-4">
+              <button type="submit" className="btn-primary">
+                Update Access Code
+              </button>
+            </div>
+          </form>
+        </>
+      )}
+
       <hr className="border-t-2 border-background" />
 
-      <form className="flex flex-col gap-4" action="">
-        <div>
-          <h2 className="text-xl font-serif font-bold">Admin Access Code</h2>
-          <p className="text-muted">
-            Update the access code for workers to upgrade their account to admin.
-          </p>
-        </div>
-
-        <TextField
-          id="staffCode"
-          name="staffCode"
-          label="Staff access code"
-          autoComplete="off"
-          spellCheck={false}
-          required
-        />
-
-        <div className="flex items-center gap-4">
-          <button type="submit"  className="btn-primary">
-            Update Access Code
-          </button>
-        </div>
-      </form>
-      
-      <hr className="border-t-2 border-background" />
-      
       <form action={soAction} className="flex flex-col gap-3">
         <div className="flex flex-row items-center justify-between">
           <div>
-            <h2 className="text-xl font-serif font-bold">
+            <h2 className="font-serif text-xl font-bold">
               Sign Out of All Devices
             </h2>
             <p className="text-muted">
@@ -103,10 +108,7 @@ export default function Security() {
           </button>
         </div>
         {soState?.message && (
-          <p
-            className="text-primary"
-            role="status"
-          >
+          <p className="text-primary" role="status">
             {soState.message}
           </p>
         )}

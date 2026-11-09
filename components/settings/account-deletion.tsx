@@ -29,7 +29,6 @@ export default function AccountDeletion() {
       <dialog
         ref={dialogRef}
         onClick={(e) => {
-          // clicking the dimmed backdrop closes it
           if (e.target === dialogRef.current) dialogRef.current?.close();
         }}
         className="m-auto w-full max-w-md rounded-2xl bg-surface text-onSurface backdrop:bg-black/60 backdrop:backdrop-blur-sm"

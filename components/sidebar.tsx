@@ -11,7 +11,12 @@ import {
 } from "@/components/nav-items";
 import { signOut } from "@/components/auth/actions";
 
-export function Sidebar({ username }: { username: string }) {
+interface SidebarProps {
+  username: string;
+  accountType?: "WORKER" | "ADMIN";
+}
+
+export function Sidebar({ username, accountType = "WORKER" }: SidebarProps) {
   const pathname = usePathname();
   const reduce = useReducedMotion();
 
@@ -19,7 +24,15 @@ export function Sidebar({ username }: { username: string }) {
     ? { duration: 0 }
     : { duration: 0.4, ease: [0.22, 1, 0.36, 1] };
 
-  const allLinks = [...TOP_NAV_ITEMS, ...BOTTOM_NAV_ITEMS];
+  // Filter top nav items based on accountType (only ADMIN sees Analytics)
+  const filteredTopNavItems = TOP_NAV_ITEMS.filter((item) => {
+    if (item.href === "/analytics") {
+      return accountType === "ADMIN";
+    }
+    return true;
+  });
+
+  const allLinks = [...filteredTopNavItems, ...BOTTOM_NAV_ITEMS];
   const activeHref = allLinks
     .filter(({ href }) => pathname === href || pathname.startsWith(`${href}/`))
     .sort((a, b) => b.href.length - a.href.length)[0]?.href;
@@ -87,7 +100,7 @@ export function Sidebar({ username }: { username: string }) {
               </h1>
               <p className="text-sm">Welcome back, {username}!</p>
             </div>
-            {renderNavLinks(TOP_NAV_ITEMS)}
+            {renderNavLinks(filteredTopNavItems)}
           </div>
           {renderNavLinks(BOTTOM_NAV_ITEMS)}
         </div>

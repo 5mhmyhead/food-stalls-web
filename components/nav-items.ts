@@ -3,6 +3,7 @@ import {
   Utensils,
   ShoppingBag,
   History,
+  BarChart3,
   Settings,
   LogOut,
   type LucideIcon,
@@ -36,6 +37,11 @@ export const TOP_NAV_ITEMS: NavItem[] = [
     label: "History",
     href: "/history",
     icon: History,
+  },
+  {
+    label: "Analytics",
+    href: "/analytics",
+    icon: BarChart3,
   },
 ];
 

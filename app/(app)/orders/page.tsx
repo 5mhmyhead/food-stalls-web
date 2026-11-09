@@ -12,7 +12,7 @@ export default function OrdersPage() {
 
   return (
     <section className="flex h-full w-full flex-col gap-6 overflow-hidden">
-      <h1 className="shrink-0 font-serif text-6xl font-black">Orders</h1>
+      <h1 className="shrink-0 font-serif text-6xl font-black pl-2">Orders</h1>
 
       <div className="flex min-h-0 gap-6">
         <div className="flex flex-1 min-h-0 flex-col gap-6">
