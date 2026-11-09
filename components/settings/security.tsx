@@ -58,7 +58,35 @@ export default function Security() {
           </button>
         </div>
       </form>
+
       <hr className="border-t-2 border-background" />
+
+      <form className="flex flex-col gap-4" action="">
+        <div>
+          <h2 className="text-xl font-serif font-bold">Admin Access Code</h2>
+          <p className="text-muted">
+            Update the access code for workers to upgrade their account to admin.
+          </p>
+        </div>
+
+        <TextField
+          id="staffCode"
+          name="staffCode"
+          label="Staff access code"
+          autoComplete="off"
+          spellCheck={false}
+          required
+        />
+
+        <div className="flex items-center gap-4">
+          <button type="submit"  className="btn-primary">
+            Update Access Code
+          </button>
+        </div>
+      </form>
+      
+      <hr className="border-t-2 border-background" />
+      
       <form action={soAction} className="flex flex-col gap-3">
         <div className="flex flex-row items-center justify-between">
           <div>
