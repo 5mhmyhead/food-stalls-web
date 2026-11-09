@@ -64,6 +64,13 @@
       "when": 1794191205017,
       "tag": "0008_access-code-attempts",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794198446870,
+      "tag": "0009_revert-own-admin",
+      "breakpoints": true
     }
   ]
 }
