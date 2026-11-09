@@ -15,7 +15,7 @@ export default async function MenuPage({
 
   return (
     <section className="h-full w-full rounded-3xl overflow-auto flex flex-col gap-6">
-      <h1 className="font-serif font-black text-6xl">Menu</h1>
+      <h1 className="font-serif font-black text-6xl pl-2">Menu</h1>
 
       <div className="flex flex-col gap-6">
         <div className="w-full rounded-3xl bg-surface p-6">

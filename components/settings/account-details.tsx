@@ -1,8 +1,15 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState, useRef, useActionState } from "react";
 import TextField from "../text-field";
 import { updateProfile, verifyAccessCode } from "@/components/auth/actions";
+import router from "next/router";
+
+export interface AccountDetailsProps {
+  username: string;
+  email: string;
+  accountType?: "WORKER" | "ADMIN";
+}
 
 export default function AccountDetails({
   username,
@@ -21,6 +28,40 @@ export default function AccountDetails({
 
   const isAdmin = role === "ADMIN";
 
+  const [code, setCode] = useState("");
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleRedeem = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setChecking(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/redeem-admin-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const result: { error?: string } = await response.json();
+
+      if (!response.ok) {
+        setError(result.error ?? "That code isn't valid.");
+        return;
+      }
+
+      setCode("");
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again.",
+      );
+    } finally {
+      setChecking(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <form className="flex flex-col gap-4" action={action}>
@@ -33,7 +74,7 @@ export default function AccountDetails({
           </p>
         </div>
 
-        <div className="grid gap-4 grid-cols-2">
+        <div className="grid grid-cols-2 gap-4">
           <TextField
             id="username"
             name="username"
