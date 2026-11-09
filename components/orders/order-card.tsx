@@ -2,9 +2,12 @@
 
 import Image from "next/image";
 import { Minus, Plus } from "lucide-react";
-import type { Category, Product } from "@/lib/mock-data";
 import { getPricing, getStockStatus, peso } from "@/lib/product-utils";
 import { getCategoryIcon, getProductTheme } from "@/lib/product-ui";
+import type { categories, products } from "@/db/schema";
+
+type Category = typeof categories.$inferSelect;
+type Product = typeof products.$inferSelect;
 
 export default function OrderCard({
   product,
@@ -18,8 +21,8 @@ export default function OrderCard({
   onQuantityChange: (next: number) => void;
 }) {
   const { price, discount, finalPrice } = getPricing(product);
-  const { soldOut, unavailable, lowStock } = getStockStatus(product);
-  
+  const { soldOut, unavailable } = getStockStatus(product);
+
   const theme = getProductTheme(product);
   const CategoryIcon = getCategoryIcon(category);
 
@@ -44,7 +47,7 @@ export default function OrderCard({
         ) : (
           <CategoryIcon className="size-16 text-muted/50 transition-colors duration-300 group-hover:text-muted" />
         )}
- 
+
         {discount > 0 && (
           <span
             className={`absolute left-3 top-3 rounded-xl px-3 py-2 font-semibold text-background ${theme.badgeBg}`}

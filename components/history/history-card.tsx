@@ -1,7 +1,7 @@
 "use client";
 
 import { Hourglass, Ban, ShoppingBag } from "lucide-react";
-import type { OrderHistoryItem } from "@/lib/mock-data";
+import type { OrderHistoryItem } from "@/components/history/actions";
 import { peso } from "@/lib/product-utils";
 import HistoryThumbnail from "./history-thumbnail";
 
@@ -11,6 +11,7 @@ const STATUS_CONFIG = {
     textColor: "text-primary",
     badgeBg: "bg-primary/20 text-primary",
     borderHover: "hover:border-primary",
+    borderColor: "border-primary",
     Icon: ShoppingBag,
   },
   PENDING: {
@@ -18,6 +19,7 @@ const STATUS_CONFIG = {
     textColor: "text-secondary",
     badgeBg: "bg-secondary/20 text-secondary",
     borderHover: "hover:border-secondary",
+    borderColor: "border-secondary",
     Icon: Hourglass,
   },
   CANCELLED: {
@@ -25,14 +27,17 @@ const STATUS_CONFIG = {
     textColor: "text-tertiary",
     badgeBg: "bg-tertiary/20 text-tertiary",
     borderHover: "hover:border-tertiary",
+    borderColor: "border-tertiary",
     Icon: Ban,
   },
 };
 
 export default function HistoryCard({
   historyItem,
+  isSelected = false,
 }: {
   historyItem: OrderHistoryItem;
+  isSelected?: boolean;
 }) {
   const { order, totalAmount, itemImages } = historyItem;
   const statusConfig = STATUS_CONFIG[order.status] ?? STATUS_CONFIG.PENDING;
@@ -51,11 +56,17 @@ export default function HistoryCard({
 
   return (
     <article
-      className={`group flex flex-col justify-between rounded-2xl bg-surface-container p-4 border-2 border-transparent transition-all duration-300 ${statusConfig.borderHover}`}
+      className={`group flex flex-col justify-between rounded-2xl bg-surface-container p-4 border-2 transition-all duration-300 ${
+        isSelected
+          ? statusConfig.borderColor
+          : `border-transparent ${statusConfig.borderHover}`
+      }`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className={`flex size-14 shrink-0 items-center justify-center rounded-full ${statusConfig.badgeBg}`}>
+          <div
+            className={`flex size-14 shrink-0 items-center justify-center rounded-full ${statusConfig.badgeBg}`}
+          >
             <StatusIcon size={28} className="stroke-[2.5]" />
           </div>
           <div>
@@ -67,7 +78,9 @@ export default function HistoryCard({
         </div>
 
         <div className="text-right">
-          <p className={`text-2xl font-semibold leading-tight ${statusConfig.textColor}`}>
+          <p
+            className={`text-2xl font-semibold leading-tight ${statusConfig.textColor}`}
+          >
             {statusConfig.label}
           </p>
           <p className="text-sm font-medium text-muted">Status</p>
@@ -82,7 +95,9 @@ export default function HistoryCard({
                 <HistoryThumbnail key={index} imgUrl={imgUrl} />
               ))}
               {remainingCount > 0 && (
-                <div className={`flex size-16 shrink-0 items-center justify-center rounded-2xl text-xl font-bold ${statusConfig.badgeBg}`}>
+                <div
+                  className={`flex size-16 shrink-0 items-center justify-center rounded-2xl text-xl font-bold ${statusConfig.badgeBg}`}
+                >
                   +{remainingCount}
                 </div>
               )}
@@ -92,9 +107,7 @@ export default function HistoryCard({
           )}
         </div>
 
-        <p className="text-3xl font-bold">
-          {peso.format(totalAmount)}
-        </p>
+        <p className="text-3xl font-bold">{peso.format(totalAmount)}</p>
       </div>
     </article>
   );

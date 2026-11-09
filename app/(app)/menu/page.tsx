@@ -1,8 +1,9 @@
+import { UtensilsCrossed } from "lucide-react";
 import MenuToolbar from "@/components/menu-toolbar";
 import ProductCard from "@/components/menu/product-card";
 import ProductDetails from "@/components/menu/product-details";
 import DetailsPanel from "@/components/menu/details-panel";
-import { mockCategories, mockProducts } from "@/lib/mock-data";
+import { getMenuData } from "@/components/menu/actions";
 
 export default async function MenuPage({
   searchParams,
@@ -10,16 +11,22 @@ export default async function MenuPage({
   searchParams: Promise<{ item?: string }>;
 }) {
   const { item } = await searchParams;
-  const categoryById = new Map(mockCategories.map((c) => [c.id, c]));
-  const selected = mockProducts.find((p) => p.id === Number(item));
+
+  // fetch real categories and products from the database
+  const { categories, products } = await getMenuData();
+
+  const categoryById = new Map(categories.map((c) => [c.id, c]));
+  const selected = products.find((p) => p.id === Number(item));
 
   return (
-    <section className="h-full w-full rounded-3xl overflow-auto flex flex-col gap-6">
-      <h1 className="font-serif font-black text-6xl pl-2">Menu</h1>
+    <section className="flex h-full w-full flex-col gap-6 overflow-hidden rounded-3xl">
+      <h1 className="shrink-0 font-serif text-6xl font-black pl-2 leading-tight">
+        Menu
+      </h1>
 
-      <div className="flex flex-col gap-6">
-        <div className="w-full rounded-3xl bg-surface p-6">
-          <MenuToolbar categories={mockCategories} products={mockProducts} />
+      <div className="flex flex-1 min-h-0 flex-col gap-6">
+        <div className="shrink-0 w-full rounded-3xl bg-surface p-6">
+          <MenuToolbar categories={categories} products={products} />
         </div>
 
         {selected && (
@@ -30,18 +37,29 @@ export default async function MenuPage({
             />
           </DetailsPanel>
         )}
-   
-        <div className="w-full rounded-3xl bg-surface p-6">
-          <div className="grid gap-4 grid-cols-4">
-            {mockProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                category={categoryById.get(product.categoryId)}
-              />
-            ))}
+
+        {products.length === 0 ? (
+          <div className="flex flex-1 min-h-0 w-full flex-col items-center justify-center rounded-3xl bg-surface p-12 text-center">
+            <div className="flex flex-col items-center gap-3">
+              <h2 className="font-serif text-4xl font-bold">No menu items found.</h2>
+              <p className="text-muted">
+                There are no menu products available right now.
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex-1 min-h-0 overflow-y-auto rounded-3xl bg-surface p-6">
+            <div className="grid grid-cols-4 gap-4">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  category={categoryById.get(product.categoryId)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

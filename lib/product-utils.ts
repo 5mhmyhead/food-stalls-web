@@ -7,6 +7,8 @@ export const peso = new Intl.NumberFormat("en-PH", {
   currency: "PHP",
 });
 
+// to convert string properties to numbers safely
+// make sure to convert since in the schema it is string
 export function getPricing(product: Product) {
   const price = Number(product.price);
   const discount = Number(product.discount ?? 0);

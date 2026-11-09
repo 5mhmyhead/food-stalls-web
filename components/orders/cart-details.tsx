@@ -1,5 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import { peso } from "@/lib/product-utils";
-import { mockCartItems, type CartItem } from "@/lib/mock-data";
+
+export interface CartItem {
+  id: number;
+  name: string;
+  categoryName: string;
+  quantity: number;
+  price: number;
+  originalPrice?: number;
+  discount?: number;
+}
 
 interface CartDetailsProps {
   items?: CartItem[];
@@ -9,11 +21,19 @@ interface CartDetailsProps {
 }
 
 export default function CartDetails({
-  items = mockCartItems,
+  items = [],
   orderId = "#83923",
-  orderDate = "October 12, 2026",
-  cashier = "Dave B.",
+  orderDate = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }),
+  cashier = "Staff",
 }: CartDetailsProps) {
+  const [orderType, setOrderType] = useState<"Dine In" | "Take Out" | "Delivery">(
+    "Dine In"
+  );
+
   const subtotal = items.reduce(
     (acc, item) => acc + (item.originalPrice ?? item.price),
     0
@@ -24,25 +44,21 @@ export default function CartDetails({
   return (
     <aside className="flex h-full w-full flex-col gap-4 overflow-hidden rounded-3xl bg-surface p-6">
       <div className="flex flex-col gap-3">
-        <div className="shrink-0 flex rounded-2xl bg-surface-container">
-          <button
-            type="button"
-            className="flex-1 rounded-2xl bg-primary py-3 text-center font-bold text-background"
-          >
-            Dine In
-          </button>
-          <button
-            type="button"
-            className="flex-1 rounded-2xl py-3 text-center font-bold text-muted transition-colors hover:text-primary"
-          >
-            Take Out
-          </button>
-          <button
-            type="button"
-            className="flex-1 rounded-2xl py-3 text-center font-bold text-muted transition-colors hover:text-primary"
-          >
-            Delivery
-          </button>
+        <div className="shrink-0 flex rounded-2xl bg-surface-container p-1">
+          {(["Dine In", "Take Out", "Delivery"] as const).map((type) => (
+            <button
+              key={type}
+              type="button"
+              onClick={() => setOrderType(type)}
+              className={`flex-1 rounded-xl py-2.5 text-center font-bold transition-all ${
+                orderType === type
+                  ? "bg-primary text-background shadow-sm"
+                  : "text-muted hover:text-primary"
+              }`}
+            >
+              {type}
+            </button>
+          ))}
         </div>
 
         <div className="shrink-0 flex items-center justify-between rounded-2xl bg-surface-container p-4">
@@ -65,8 +81,13 @@ export default function CartDetails({
 
       <div className="flex flex-1 min-h-0 flex-col gap-3 overflow-y-auto rounded-2xl">
         {items.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-muted">
-            No items in order
+          <div className="flex h-full items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <h2 className="font-serif text-4xl font-bold">No items in order.</h2>
+              <p className="text-muted">
+                Add menu items using the menu panel.
+              </p>
+            </div>
           </div>
         ) : (
           items.map((item) => (
@@ -79,7 +100,9 @@ export default function CartDetails({
                   {item.quantity}x
                 </span>
                 <div>
-                  <h3 className="font-serif text-xl font-bold leading-tight">{item.name}</h3>
+                  <h3 className="font-serif text-xl font-bold leading-tight">
+                    {item.name}
+                  </h3>
                   <p className="text-sm text-muted">{item.categoryName}</p>
                 </div>
               </div>
@@ -115,7 +138,9 @@ export default function CartDetails({
         <hr className="border-t-2 border-background" />
 
         <div className="flex items-baseline justify-between">
-          <span className="font-serif text-3xl font-bold leading-tight">Total</span>
+          <span className="font-serif text-3xl font-bold leading-tight">
+            Total
+          </span>
           <span className="font-serif text-3xl font-bold leading-tight">
             {peso.format(finalTotal)}
           </span>
@@ -123,7 +148,8 @@ export default function CartDetails({
 
         <button
           type="button"
-          className="w-full btn-primary"
+          disabled={items.length === 0}
+          className="w-full btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Complete Order
         </button>
