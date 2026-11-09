@@ -39,12 +39,9 @@ export default function ProductCard({
   const CategoryIcon = getCategoryIcon(category);
 
   return (
-    <Link
-      href={`/menu?item=${product.id}`}
-      className="flex"
-    >
+    <Link href={`/menu?item=${product.id}`} className="flex">
       <article
-        className={`group flex flex-col overflow-hidden rounded-2xl bg-surface-container border-2 border-transparent transition-all duration-300 ${
+        className={`w-full group flex flex-col overflow-hidden rounded-2xl bg-surface-container border-2 border-transparent transition-all duration-300 ${
           theme.borderHover
         } ${unavailable ? "opacity-70" : ""}`}
       >
@@ -74,7 +71,7 @@ export default function ProductCard({
             </span>
           )}
         </div>
-        
+
         <div className="flex flex-1 flex-col gap-3 p-5">
           <div>
             {category && <p className="text-sm text-muted">{category.name}</p>}
@@ -82,7 +79,9 @@ export default function ProductCard({
               {product.name}
             </h3>
             {product.description && (
-              <p className="mt-1 line-clamp-2 text-muted">{product.description}</p>
+              <p className="mt-1 line-clamp-2 text-muted">
+                {product.description}
+              </p>
             )}
           </div>
 
@@ -101,8 +100,8 @@ export default function ProductCard({
               {soldOut
                 ? "No stock"
                 : lowStock
-                ? `Only ${product.stock} left`
-                : `${product.stock} in stock`}
+                  ? `Only ${product.stock} left`
+                  : `${product.stock} in stock`}
             </p>
           </div>
         </div>
