@@ -8,7 +8,7 @@ import { and, count, eq, gt } from "drizzle-orm";
 import { createClient } from "@/utils/supabase/server";
 import { db } from "@/db";
 import { accessCodeAttempts, profiles } from "@/db/schema";
-import { verifyUser } from "@/lib/dal";
+import { verifyUser, verifyAdmin } from "@/lib/dal";
 import {
   SignInSchema,
   SignUpSchema,
@@ -360,4 +360,35 @@ export async function verifyAccessCode(
 
   revalidatePath("/", "layout");
   return { message: "Your account is now an admin.", success: true };
+}
+
+export async function revertToWorker(
+  _prev: AuthState,
+  form: FormData,
+): Promise<AuthState> {
+  const user = await verifyAdmin();
+
+  const password = String(form.get("password") ?? "");
+  if (!password) return { message: "Enter your password to confirm." };
+
+  const supabase = await createClient();
+
+  // re-check the password so a signed-in device can't be downgraded by someone else
+  const { error: pwError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password,
+  });
+  if (pwError) return { message: "Incorrect password." };
+
+  const { error } = await supabase.rpc("revert_own_admin");
+  if (error) {
+    return {
+      message: error.message.includes("last_admin")
+        ? "You are the only admin. Make another account an admin before reverting yours."
+        : "Could not revert your account. Try again.",
+    };
+  }
+
+  revalidatePath("/", "layout");
+  return { message: "Your account is now a worker.", success: true };
 }

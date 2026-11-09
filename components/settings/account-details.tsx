@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useRef, useActionState } from "react";
-import { useRouter } from "next/navigation";
+import { useRef, useActionState } from "react";
 import TextField from "../text-field";
-import { updateProfile } from "@/components/auth/actions";
+import {
+  updateProfile,
+  revertToWorker,
+  verifyAccessCode,
+} from "@/components/auth/actions";
 
 export interface AccountDetailsProps {
   username: string;
@@ -16,51 +19,17 @@ export default function AccountDetails({
   email,
   accountType = "WORKER",
 }: AccountDetailsProps) {
-  const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const [state, action, pending] = useActionState(updateProfile, undefined);
-
-  const [code, setCode] = useState("");
-  const [checking, setChecking] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleRedeem = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setChecking(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/redeem-admin-code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
-      });
-      const result: { error?: string } = await response.json();
-
-      if (!response.ok) {
-        setError(result.error ?? "That code isn't valid.");
-        return;
-      }
-
-      setCode("");
-      router.refresh();
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong. Please try again."
-      );
-    } finally {
-      setChecking(false);
-    }
-  };
-
-  const handleRevertSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // placeholder until server action is wired
-    dialogRef.current?.close();
-  };
+  const [codeState, codeAction, checking] = useActionState(
+    verifyAccessCode,
+    undefined,
+  );
+  const [revertState, revertAction, reverting] = useActionState(
+    revertToWorker,
+    undefined,
+  );
 
   const formattedRole = accountType.toLowerCase();
 
@@ -68,7 +37,9 @@ export default function AccountDetails({
     <div className="flex flex-col gap-6">
       <form className="flex flex-col gap-4" action={action}>
         <div>
-          <h2 className="font-serif text-xl font-bold">Change Account Details</h2>
+          <h2 className="font-serif text-xl font-bold">
+            Change Account Details
+          </h2>
           <p className="text-muted">
             You can change your username and email below.
           </p>
@@ -135,34 +106,30 @@ export default function AccountDetails({
         </div>
 
         {accountType === "WORKER" && (
-          <form onSubmit={handleRedeem} className="flex flex-col gap-4">
+          <form action={codeAction} className="flex flex-col gap-4">
             <TextField
-              id="staffCode"
-              name="staffCode"
+              id="accessCode"
+              name="accessCode"
               label="Admin Access Code"
               autoComplete="off"
               spellCheck={false}
               required
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value);
-                setError(null);
-              }}
               className="font-mono tracking-widest"
             />
 
-            {error && (
-              <p className="text-xs font-semibold text-rose-500" role="alert">
-                {error}
+            {codeState?.message && (
+              <p
+                className={`text-xs font-semibold ${
+                  codeState.success ? "text-green-700" : "text-rose-500"
+                }`}
+                role="status"
+              >
+                {codeState.message}
               </p>
             )}
 
             <div className="flex items-center gap-4">
-              <button
-                type="submit"
-                disabled={checking}
-                className="btn-primary"
-              >
+              <button type="submit" disabled={checking} className="btn-primary">
                 {checking ? "Verifying..." : "Verify Access Code"}
               </button>
             </div>
@@ -178,12 +145,12 @@ export default function AccountDetails({
           }}
           className="m-auto w-full max-w-md rounded-2xl bg-surface text-onSurface backdrop:bg-black/60 backdrop:backdrop-blur-sm"
         >
-          <form onSubmit={handleRevertSubmit} className="flex flex-col gap-5 p-8">
-            <h2 className="font-serif text-3xl font-bold">
-              Revert to worker?
-            </h2>
+          <form action={revertAction} className="flex flex-col gap-5 p-8">
+            <h2 className="font-serif text-3xl font-bold">Revert to worker?</h2>
             <p className="text-muted">
-              You will lose administrative access, including analytics and management privileges. You will need a staff access code to become an admin again.
+              You will lose administrative access, including analytics and
+              management privileges. You will need a staff access code to become
+              an admin again.
             </p>
 
             <TextField
@@ -195,6 +162,12 @@ export default function AccountDetails({
               required
             />
 
+            {revertState?.message && !revertState.success && (
+              <p className="text-sm text-red-600" role="alert">
+                {revertState.message}
+              </p>
+            )}
+
             <div className="flex justify-end gap-3">
               <button
                 type="button"
@@ -203,8 +176,12 @@ export default function AccountDetails({
               >
                 Cancel
               </button>
-              <button type="submit" className="btn-primary">
-                Revert Account
+              <button
+                type="submit"
+                disabled={reverting}
+                className="btn-primary"
+              >
+                {reverting ? "Reverting..." : "Revert Account"}
               </button>
             </div>
           </form>
