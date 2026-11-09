@@ -1,11 +1,13 @@
 "use server";
+
+import { createHash, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
+import { and, count, eq, gt } from "drizzle-orm";
 import { createClient } from "@/utils/supabase/server";
 import { db } from "@/db";
-import { profiles } from "@/db/schema";
+import { accessCodeAttempts, profiles } from "@/db/schema";
 import { verifyUser } from "@/lib/dal";
 import {
   SignInSchema,
@@ -25,8 +27,11 @@ export async function signIn(
   form: FormData,
 ): Promise<AuthState> {
   const username = String(form.get("username") ?? "");
-  const parsed = SignInSchema.safeParse({username, password: form.get("password")});
-  
+  const parsed = SignInSchema.safeParse({
+    username,
+    password: form.get("password"),
+  });
+
   if (!parsed.success) {
     return { message: "Enter your username and password.", username };
   }
@@ -105,7 +110,7 @@ export async function requestPasswordReset(
 ): Promise<AuthState> {
   const email = String(form.get("email") ?? "");
   const parsed = ForgotPasswordSchema.safeParse({ email });
-  
+
   if (!parsed.success) {
     return { message: parsed.error.issues[0].message, email };
   }
@@ -148,7 +153,7 @@ export async function updatePassword(
   const { error } = await supabase.auth.updateUser({
     password: parsed.data.password,
   });
-  
+
   if (error) {
     return {
       message:
@@ -304,4 +309,60 @@ export async function deleteAccount(
 
   await supabase.auth.signOut({ scope: "local" });
   redirect("/");
+}
+
+const MAX_ATTEMPTS = 5;
+const WINDOW_MINUTES = 15;
+
+function codesMatch(a: string, b: string) {
+  // hashing first makes both values the same length for a constant-time compare
+  const ha = createHash("sha256").update(a).digest();
+  const hb = createHash("sha256").update(b).digest();
+  return timingSafeEqual(ha, hb);
+}
+
+export async function verifyAccessCode(
+  _prev: AuthState,
+  form: FormData,
+): Promise<AuthState> {
+  const user = await verifyUser();
+  if (user.role === "ADMIN") {
+    return { message: "Your account is already an admin." };
+  }
+
+  const code = String(form.get("accessCode") ?? "").trim();
+  if (!code) return { message: "Enter the access code." };
+
+  const since = new Date(Date.now() - WINDOW_MINUTES * 60 * 1000);
+  const [{ failures }] = await db
+    .select({ failures: count() })
+    .from(accessCodeAttempts)
+    .where(
+      and(
+        eq(accessCodeAttempts.userId, user.userId),
+        gt(accessCodeAttempts.attemptedAt, since),
+      ),
+    );
+  if (failures >= MAX_ATTEMPTS) {
+    return { message: "Too many attempts. Try again in 15 minutes." };
+  }
+
+  const expected = process.env.STAFF_ACCESS_CODE;
+  if (!expected) {
+    console.error("STAFF_ACCESS_CODE is not set");
+    return { message: "Access codes aren't set up yet. Ask the shop owner." };
+  }
+
+  if (!codesMatch(code, expected)) {
+    await db.insert(accessCodeAttempts).values({ userId: user.userId });
+    return { message: "Invalid access code." };
+  }
+
+  await db
+    .update(profiles)
+    .set({ accountType: "ADMIN" })
+    .where(eq(profiles.id, user.userId));
+
+  revalidatePath("/", "layout");
+  return { message: "Your account is now an admin.", success: true };
 }

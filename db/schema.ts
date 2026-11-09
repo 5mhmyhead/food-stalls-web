@@ -76,3 +76,11 @@ export const orderItems = pgTable(
   },
   (t) => [unique().on(t.orderId, t.productId)],
 ).enableRLS();
+
+export const accessCodeAttempts = pgTable("access_code_attempts", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  attemptedAt: timestamp("attempted_at").notNull().defaultNow(),
+}).enableRLS();

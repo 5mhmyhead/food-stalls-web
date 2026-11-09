@@ -57,6 +57,13 @@
       "when": 1793754076238,
       "tag": "0007_delete-own-account",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794191205017,
+      "tag": "0008_access-code-attempts",
+      "breakpoints": true
     }
   ]
 }

@@ -13,7 +13,11 @@ export default async function SettingsPage() {
       <h1 className="font-serif font-black text-6xl">Settings</h1>
       <div className="flex flex-col pt-6 gap-4">
         <SettingsSection title="Account Details">
-          <AccountDetails username={user.username} email={user.email} />
+          <AccountDetails
+            username={user.username}
+            email={user.email}
+            role={user.role}
+          />
         </SettingsSection>
         <SettingsSection title="Security">
           <Security />
