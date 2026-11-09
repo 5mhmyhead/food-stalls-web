@@ -1,18 +1,22 @@
 "use client";
 
 import { Check, X } from "lucide-react";
-import type { OrderHistoryItem } from "@/lib/mock-data";
+import type { OrderHistoryItem } from "@/components/home/actions";
 import { peso } from "@/lib/product-utils";
 import HistoryThumbnail from "@/components/history/history-thumbnail";
 
 type PendingOrderCardProps = {
   historyItem: OrderHistoryItem;
+  isSelected?: boolean;
+  onSelect?: () => void;
   onComplete?: (orderId: number) => void;
   onCancel?: (orderId: number) => void;
 };
 
 export default function PendingOrderCard({
   historyItem,
+  isSelected = false,
+  onSelect,
   onComplete,
   onCancel,
 }: PendingOrderCardProps) {
@@ -30,7 +34,14 @@ export default function PendingOrderCard({
   const remainingCount = itemImages ? itemImages.length - 2 : 0;
 
   return (
-    <article className="group flex flex-col justify-between rounded-2xl border-2 border-transparent bg-surface-container p-4 transition-all duration-300 hover:border-secondary">
+    <article
+      onClick={onSelect}
+      className={`group flex cursor-pointer flex-col justify-between rounded-2xl border-2 bg-surface-container p-4 transition-all duration-300 ${
+        isSelected
+          ? "border-secondary"
+          : "border-transparent hover:border-secondary"
+      }`}
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div>
@@ -44,14 +55,20 @@ export default function PendingOrderCard({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => onCancel?.(order.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onCancel?.(order.id);
+            }}
             className="flex size-12 items-center justify-center rounded-xl bg-muted/20 text-muted transition-colors hover:bg-muted hover:text-white"
           >
             <X size={24} className="stroke-3" />
           </button>
           <button
             type="button"
-            onClick={() => onComplete?.(order.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onComplete?.(order.id);
+            }}
             className="flex size-12 items-center justify-center rounded-xl bg-secondary/25 text-secondary transition-colors hover:bg-secondary hover:text-white"
           >
             <Check size={24} className="stroke-3" />
