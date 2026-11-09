@@ -30,13 +30,13 @@
 
 - **Done:** None
 - **Next:**  5.3 Updating Figma designs for simpler UI coding and implementation.   
-- **Blockers:** None
+- **Blockers:** Shifted focus on other projects.
 
 ### Adi De Vera
 
 - **Done:** None 
 - **Next:** 5.4 Continuing on developing mobile app and it's pages.   
-- **Blockers:**  5.3 Updating Figma designs for simpler UI coding and implementation.   
+- **Blockers:** Waiting for updated Figma designs for simpler UI implementation.  
 
 ### Dave Bartolabac
 
