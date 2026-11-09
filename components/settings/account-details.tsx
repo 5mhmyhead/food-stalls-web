@@ -152,7 +152,7 @@ export default function AccountDetails({
             />
 
             {error && (
-              <p className="text-xs font-semibold text-rose-500" role="alert">
+              <p className="text-primary" role="alert">
                 {error}
               </p>
             )}

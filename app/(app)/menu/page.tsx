@@ -1,4 +1,8 @@
-import { UtensilsCrossed } from "lucide-react";
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import MenuToolbar from "@/components/menu-toolbar";
 import ProductCard from "@/components/menu/product-card";
 import ProductDetails from "@/components/menu/product-details";
@@ -12,9 +16,25 @@ export default async function MenuPage({
 }) {
   const { item } = await searchParams;
 
-  // fetch real categories and products from the database
-  const { categories, products } = await getMenuData();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
+  if (!user) {
+    redirect("/");
+  }
+
+  const [profile, { categories, products }] = await Promise.all([
+    db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.id, user.id))
+      .then((res) => res[0]),
+    getMenuData(),
+  ]);
+
+  const isAdmin = profile?.accountType === "ADMIN";
   const categoryById = new Map(categories.map((c) => [c.id, c]));
   const selected = products.find((p) => p.id === Number(item));
 
@@ -26,7 +46,11 @@ export default async function MenuPage({
 
       <div className="flex flex-1 min-h-0 flex-col gap-6">
         <div className="shrink-0 w-full rounded-3xl bg-surface p-6">
-          <MenuToolbar categories={categories} products={products} />
+          <MenuToolbar
+            categories={categories}
+            products={products}
+            isAdmin={isAdmin}
+          />
         </div>
 
         {selected && (

@@ -52,7 +52,7 @@ export default function ProductCard({
               alt={product.name}
               fill
               sizes="(min-width: 1024px) 25vw, 50vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-300"
             />
           ) : (
             <CategoryIcon className="size-16 text-muted/50 transition-colors duration-300 group-hover:text-muted" />

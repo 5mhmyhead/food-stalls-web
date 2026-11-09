@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   Search,
   CookingPot,
@@ -5,11 +8,19 @@ import {
   Soup,
   Cookie,
   CupSoda,
+  Pizza,
+  Coffee,
+  IceCream,
   LayoutGrid,
   type LucideIcon,
 } from "lucide-react";
 import TextField from "./text-field";
-import type { Category, Product } from "@/lib/mock-data";
+import CreateProductModal from "@/components/menu/create-product-modal";
+import CreateCategoryModal from "@/components/menu/create-category-modal";
+import type { categories, products } from "@/db/schema";
+
+type Category = typeof categories.$inferSelect;
+type Product = typeof products.$inferSelect;
 
 const ICON_MAP: Record<string, LucideIcon> = {
   CookingPot,
@@ -17,11 +28,23 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Soup,
   Cookie,
   CupSoda,
+  Pizza,
+  Coffee,
+  IceCream,
 };
 
 type Variant = "default" | "compact";
 
-const VARIANT_STYLES: Record<Variant, { chip: string; icon: string; label: string; searchIcon: number; showCount: boolean }> = {
+const VARIANT_STYLES: Record<
+  Variant,
+  {
+    chip: string;
+    icon: string;
+    label: string;
+    searchIcon: number;
+    showCount: boolean;
+  }
+> = {
   default: {
     chip: "flex-col items-start gap-2 px-5 py-3",
     icon: "size-7",
@@ -33,7 +56,7 @@ const VARIANT_STYLES: Record<Variant, { chip: string; icon: string; label: strin
     chip: "flex-row items-center gap-2 px-5 py-2",
     icon: "size-5",
     label: "",
-    searchIcon: 20,
+    searchIcon: 28,
     showCount: false,
   },
 };
@@ -42,6 +65,7 @@ interface MenuToolbarProps {
   categories: Category[];
   products: Product[];
   variant?: Variant;
+  isAdmin?: boolean;
 }
 
 interface FilterChipProps {
@@ -52,7 +76,13 @@ interface FilterChipProps {
   variant: Variant;
 }
 
-function FilterChip({ icon: Icon, label, count, active = false, variant }: FilterChipProps) {
+function FilterChip({
+  icon: Icon,
+  label,
+  count,
+  active = false,
+  variant,
+}: FilterChipProps) {
   const styles = VARIANT_STYLES[variant];
 
   return (
@@ -85,42 +115,88 @@ export default function MenuToolbar({
   categories,
   products,
   variant = "default",
+  isAdmin = false,
 }: MenuToolbarProps) {
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+
   const styles = VARIANT_STYLES[variant];
 
-  const categoryCounts = products.reduce<Record<number, number>>((acc, product) => {
-    acc[product.categoryId] = (acc[product.categoryId] || 0) + 1;
-    return acc;
-  }, {});
+  const categoryCounts = products.reduce<Record<number, number>>(
+    (acc, product) => {
+      acc[product.categoryId] = (acc[product.categoryId] || 0) + 1;
+      return acc;
+    },
+    {}
+  );
 
   return (
-    <div className="flex flex-col gap-4">
-      <TextField
-        id="search"
-        name="search"
-        placeholder="Search for a menu item..."
-        icon={<Search size={styles.searchIcon} />}
-      />
+    <>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <TextField
+              id="search"
+              name="search"
+              placeholder="Search for a menu item..."
+              icon={<Search size={styles.searchIcon} />}
+            />
+          </div>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <FilterChip
-          icon={LayoutGrid}
-          label="All Items"
-          count={products.length}
-          active
-          variant={variant}
-        />
+          {variant === "default" && isAdmin && (
+            <div className="flex shrink-0 items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setIsProductModalOpen(true)}
+                className="btn-primary whitespace-nowrap"
+              >
+                Create Menu Item
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsCategoryModalOpen(true)}
+                className="btn-secondary whitespace-nowrap"
+              >
+                Create Category
+              </button>
+            </div>
+          )}
+        </div>
 
-        {categories.map((category) => (
+        <div className="flex flex-wrap items-center gap-2">
           <FilterChip
-            key={category.id}
-            icon={ICON_MAP[category.icon]}
-            label={category.name}
-            count={categoryCounts[category.id] ?? 0}
+            icon={LayoutGrid}
+            label="All Items"
+            count={products.length}
+            active
             variant={variant}
           />
-        ))}
+
+          {categories.map((category) => {
+            const CategoryIcon = ICON_MAP[category.icon] ?? Utensils;
+            return (
+              <FilterChip
+                key={category.id}
+                icon={CategoryIcon}
+                label={category.name}
+                count={categoryCounts[category.id] ?? 0}
+                variant={variant}
+              />
+            );
+          })}
+        </div>
       </div>
-    </div>
+
+      <CreateProductModal
+        isOpen={isProductModalOpen}
+        onClose={() => setIsProductModalOpen(false)}
+        categories={categories}
+      />
+
+      <CreateCategoryModal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+      />
+    </>
   );
 }

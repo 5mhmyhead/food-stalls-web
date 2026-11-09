@@ -72,9 +72,6 @@ export default function Select({
       <button
         type="button"
         role="combobox"
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        aria-controls={listId}
         onClick={toggle}
         onKeyDown={onKeyDown}
         className={`flex w-full items-center justify-between gap-3 rounded-xl border-2 bg-surface-container px-4 py-3 text-left transition-colors duration-200 hover:border-primary/50 focus-visible:border-primary focus-visible:outline-none ${
@@ -99,7 +96,6 @@ export default function Select({
             <li
               key={o.value}
               role="option"
-              aria-selected={o.value === value}
               onMouseEnter={() => setActive(i)}
               onClick={() => choose(i)}
               className={`flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 transition-colors ${

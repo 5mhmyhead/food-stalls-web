@@ -52,7 +52,7 @@ export default function CartDetails({
               onClick={() => setOrderType(type)}
               className={`flex-1 rounded-xl py-2.5 text-center font-bold transition-all ${
                 orderType === type
-                  ? "bg-primary text-background shadow-sm"
+                  ? "bg-primary text-background"
                   : "text-muted hover:text-primary"
               }`}
             >

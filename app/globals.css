@@ -54,5 +54,13 @@
 }
 
 @utility btn-muted {
-  @apply px-6 py-3 rounded-xl bg-muted/20  text-onSurface cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50; 
+  @apply px-6 py-3 rounded-xl bg-muted/20 text-onSurface cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50; 
+}
+
+@utility input-control {
+  @apply h-12 w-full rounded-xl bg-surface-container px-4 font-medium outline-none placeholder:text-muted/60 focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@utility input-number {
+  @apply h-12 w-full rounded-xl bg-surface-container px-4 font-medium outline-none placeholder:text-muted/60 focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-60 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none;
 }
