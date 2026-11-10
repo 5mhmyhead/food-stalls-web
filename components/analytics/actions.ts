@@ -6,16 +6,13 @@ import type { AnalyticsMetric, TimeRange } from "@/lib/analytics-types";
 
 type OrderStatus = (typeof orders.$inferSelect)["status"];
 
-// CHANGE THIS IF PENDING ORDERS SHOULD ALSO COUNT, E.G. ["PENDING", "COMPLETED"]
 const COUNTED_STATUSES: OrderStatus[] = ["COMPLETED"];
 
 const MANILA_OFFSET_MS = 8 * 60 * 60 * 1000;
 
-// START OF TODAY / THIS WEEK (MONDAY) / THIS MONTH IN MANILA TIME, AS A UTC INSTANT
 function getRangeStart(range: TimeRange): Date | null {
   if (range === "all-time") return null;
 
-  // SHIFT "NOW" SO THE UTC FIELDS READ AS MANILA WALL-CLOCK TIME
   const local = new Date(Date.now() + MANILA_OFFSET_MS);
   const y = local.getUTCFullYear();
   const m = local.getUTCMonth();
@@ -23,13 +20,13 @@ function getRangeStart(range: TimeRange): Date | null {
 
   let startLocal: number;
   if (range === "daily") startLocal = Date.UTC(y, m, d);
-  else if (range === "weekly") startLocal = Date.UTC(y, m, d - ((local.getUTCDay() + 6) % 7));
+  else if (range === "weekly")
+    startLocal = Date.UTC(y, m, d - ((local.getUTCDay() + 6) % 7));
   else startLocal = Date.UTC(y, m, 1);
 
   return new Date(startLocal - MANILA_OFFSET_MS);
 }
 
-// KEEPS THE TOP (limit - 1) ENTRIES AND FOLDS THE REST INTO "OTHER" SO THE 5-COLOR PALETTE NEVER REPEATS
 function groupTail(items: { name: string; value: number }[], limit = 5) {
   const sorted = [...items].sort((a, b) => b.value - a.value);
   if (sorted.length <= limit) return sorted;
@@ -44,10 +41,14 @@ const round2 = (n: number) => Math.round(n * 100) / 100;
 export async function getAnalytics(range: TimeRange): Promise<AnalyticsMetric> {
   const start = getRangeStart(range);
 
-  // and() IGNORES undefined, SO ALL-TIME SIMPLY SKIPS THE DATE FILTER
   const orderFilter = and(
     inArray(orders.status, COUNTED_STATUSES),
-    start ? gte(orders.orderedAt, start) : undefined,
+    start ? gte(orders.orderedAt, start) : undefined
+  );
+
+  const activeProductFilter = and(
+    orderFilter,
+    eq(products.isArchived, false)
   );
 
   const [rows, [orderCount]] = await Promise.all([
@@ -62,13 +63,17 @@ export async function getAnalytics(range: TimeRange): Promise<AnalyticsMetric> {
       .innerJoin(orders, eq(orderItems.orderId, orders.id))
       .innerJoin(products, eq(orderItems.productId, products.id))
       .innerJoin(categories, eq(products.categoryId, categories.id))
-      .where(orderFilter)
+      .where(activeProductFilter)
       .groupBy(products.id, products.name, categories.name),
 
     db
-      .select({ customers: sql<number>`count(*)`.mapWith(Number) })
+      .select({
+        customers: sql<number>`count(distinct ${orders.id})`.mapWith(Number),
+      })
       .from(orders)
-      .where(orderFilter),
+      .innerJoin(orderItems, eq(orderItems.orderId, orders.id))
+      .innerJoin(products, eq(orderItems.productId, products.id))
+      .where(activeProductFilter),
   ]);
 
   const productsSold = rows.reduce((sum, r) => sum + r.unitsSold, 0);
@@ -76,12 +81,15 @@ export async function getAnalytics(range: TimeRange): Promise<AnalyticsMetric> {
 
   const byUnits = [...rows].sort((a, b) => b.unitsSold - a.unitsSold);
   const top = byUnits[0];
-  // WITH ONLY ONE SOLD PRODUCT, "LOWEST" WOULD JUST REPEAT THE TOP ONE
+
   const lowest = byUnits.length > 1 ? byUnits[byUnits.length - 1] : undefined;
 
   const categoryUnits = new Map<string, number>();
   for (const r of rows) {
-    categoryUnits.set(r.categoryName, (categoryUnits.get(r.categoryName) ?? 0) + r.unitsSold);
+    categoryUnits.set(
+      r.categoryName,
+      (categoryUnits.get(r.categoryName) ?? 0) + r.unitsSold
+    );
   }
 
   return {
@@ -90,11 +98,11 @@ export async function getAnalytics(range: TimeRange): Promise<AnalyticsMetric> {
     customers: orderCount?.customers ?? 0,
     topProduct: top ? { name: top.name, salesCount: top.unitsSold } : null,
     lowestProduct: lowest ? { name: lowest.name, salesCount: lowest.unitsSold } : null,
-    incomeBreakdown: groupTail(rows.map((r) => ({ name: r.name, value: r.revenue }))).map(
-      (i) => ({ name: i.name, amount: round2(i.value) }),
-    ),
+    incomeBreakdown: groupTail(
+      rows.map((r) => ({ name: r.name, value: r.revenue }))
+    ).map((i) => ({ name: i.name, amount: round2(i.value) })),
     categoryBreakdown: groupTail(
-      [...categoryUnits].map(([name, value]) => ({ name, value })),
+      [...categoryUnits].map(([name, value]) => ({ name, value }))
     ).map((i) => ({
       name: i.name,
       value: productsSold ? Math.round((i.value / productsSold) * 100) : 0,

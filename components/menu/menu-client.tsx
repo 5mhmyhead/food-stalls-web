@@ -52,7 +52,7 @@ export default function MenuClient({
   }, [products, searchQuery, selectedCategory]);
 
   return (
-    <section className="flex min-h-full w-full flex-col gap-6 rounded-3xl">
+    <section className="flex h-full w-full flex-col gap-6 rounded-3xl overflow-y-auto">
       <h1 className="shrink-0 font-serif text-6xl font-black pl-2 leading-tight">
         Menu
       </h1>
@@ -93,7 +93,7 @@ export default function MenuClient({
             </div>
           </div>
         ) : (
-          <div className="flex-1 w-full rounded-3xl bg-surface p-6">
+          <div className="flex-1 w-full rounded-3xl bg-surface p-6 overflow-hidden">
             <div className="grid grid-cols-4 gap-4">
               {filteredProducts.map((product) => (
                 <ProductCard

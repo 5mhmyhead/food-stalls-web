@@ -54,6 +54,8 @@ export const products = pgTable("products", {
   discount: numeric("discount", { precision: 5, scale: 2 }),
   availability: boolean("availability").notNull().default(true),
   imageUrl: text("image_url"),
+  isArchived: boolean("is_archived").notNull().default(false),
+  createdAt: timestamp("created_at").defaultNow(),
 }).enableRLS();
 
 export const orders = pgTable("orders", {

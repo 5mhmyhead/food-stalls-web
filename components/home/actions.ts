@@ -38,7 +38,7 @@ export async function getHomeData(userId: string) {
       .where(eq(profiles.id, userId))
       .then((res) => res[0]),
     db.select().from(categories),
-    db.select().from(products),
+    db.select().from(products).where(eq(products.isArchived, false)),
     db
       .select({
         order: orders,

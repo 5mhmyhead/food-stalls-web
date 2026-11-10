@@ -9,7 +9,7 @@ import { createClient } from "@/utils/supabase/server";
 export async function getOrdersData() {
   const [categoryList, productList] = await Promise.all([
     db.select().from(categories),
-    db.select().from(products),
+    db.select().from(products).where(eq(products.isArchived, false)),
   ]);
 
   return {

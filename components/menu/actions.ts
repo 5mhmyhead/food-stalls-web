@@ -12,7 +12,7 @@ export async function getMenuCategories() {
 }
 
 export async function getMenuProducts() {
-  return await db.select().from(products);
+  return await db.select().from(products).where(eq(products.isArchived, false));
 }
 
 export async function getMenuData() {
@@ -121,7 +121,13 @@ export async function updateProduct(
 export async function deleteProduct(id: number) {
   await requireAdmin();
 
-  await db.delete(products).where(eq(products.id, id));
+  await db
+    .update(products)
+    .set({
+      isArchived: true,
+      availability: false,
+    })
+    .where(eq(products.id, id));
 
   revalidatePath("/menu");
   revalidatePath("/orders");
