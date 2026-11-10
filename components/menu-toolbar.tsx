@@ -1,38 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Search,
-  CookingPot,
-  Utensils,
-  Soup,
-  Cookie,
-  CupSoda,
-  Pizza,
-  Coffee,
-  IceCream,
-  LayoutGrid,
-  type LucideIcon,
-} from "lucide-react";
+import { Search, LayoutGrid, type LucideIcon } from "lucide-react";
 import TextField from "./text-field";
 import CreateProductModal from "@/components/menu/create-product-modal";
 import CreateCategoryModal from "@/components/menu/create-category-modal";
+import { getCategoryIcon } from "@/lib/category-icons";
 import type { categories, products } from "@/db/schema";
 
 type Category = typeof categories.$inferSelect;
 type Product = typeof products.$inferSelect;
-
-const ICON_MAP: Record<string, LucideIcon> = {
-  CookingPot,
-  Utensils,
-  Soup,
-  Cookie,
-  CupSoda,
-  Pizza,
-  Coffee,
-  IceCream,
-};
-
 type Variant = "default" | "compact";
 
 const VARIANT_STYLES: Record<
@@ -186,20 +163,17 @@ export default function MenuToolbar({
             variant={variant}
           />
 
-          {categories.map((category) => {
-            const CategoryIcon = ICON_MAP[category.icon] ?? Utensils;
-            return (
-              <FilterChip
-                key={category.id}
-                icon={CategoryIcon}
-                label={category.name}
-                count={categoryCounts[category.id] ?? 0}
-                active={selectedCategory === category.id}
-                onClick={() => onCategoryChange?.(category.id)}
-                variant={variant}
-              />
-            );
-          })}
+          {categories.map((category) => (
+            <FilterChip
+              key={category.id}
+              icon={getCategoryIcon(category.icon)}
+              label={category.name}
+              count={categoryCounts[category.id] ?? 0}
+              active={selectedCategory === category.id}
+              onClick={() => onCategoryChange?.(category.id)}
+              variant={variant}
+            />
+          ))}
         </div>
       </div>
 

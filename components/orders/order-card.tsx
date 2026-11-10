@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { Minus, Plus } from "lucide-react";
 import { getPricing, getStockStatus, peso } from "@/lib/product-utils";
-import { getCategoryIcon, getProductTheme } from "@/lib/product-ui";
+import { getProductTheme } from "@/lib/product-ui";
 import type { categories, products } from "@/db/schema";
+import { getCategoryIcon } from "@/lib/category-icons";
 
 type Category = typeof categories.$inferSelect;
 type Product = typeof products.$inferSelect;
@@ -24,18 +25,18 @@ export default function OrderCard({
   const { soldOut, unavailable } = getStockStatus(product);
 
   const theme = getProductTheme(product);
-  const CategoryIcon = getCategoryIcon(category);
+  const CategoryIcon = getCategoryIcon(category?.icon);
 
   const canAdd = !unavailable && quantity < product.stock;
   const canSubtract = quantity > 0;
 
   return (
     <article
-      className={`group flex flex-col overflow-hidden rounded-2xl bg-surface-container border-2 border-transparent transition-all duration-300 ${
+      className={`group flex h-full w-full flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-surface-container transition-all duration-300 ${
         theme.borderHover
       } ${unavailable ? "opacity-70" : ""}`}
     >
-      <div className="relative flex h-40 items-center justify-center bg-background">
+      <div className="relative flex h-40 shrink-0 items-center justify-center bg-background">
         {product.imageUrl ? (
           <Image
             src={product.imageUrl}
@@ -62,47 +63,53 @@ export default function OrderCard({
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          {category && <p className="text-sm text-muted">{category.name}</p>}
-          <h3 className="mb-4 font-serif text-2xl font-bold leading-tight line-clamp-2">
-            {product.name}
-          </h3>
-        </div>
-
-        <div className="mt-auto flex items-end gap-2">
-          <p className={`text-xl font-bold ${theme.text}`}>
-            {peso.format(finalPrice)}
+          <p className="text-sm font-medium text-muted">
+            {category?.name ?? "\u00A0"}
           </p>
-          {discount > 0 && (
-            <p className="text-sm text-muted line-through">
-              {peso.format(price)}
-            </p>
-          )}
+          <div className="mt-1 flex h-14 items-start">
+            <h3 className="font-serif text-2xl font-bold leading-tight line-clamp-2">
+              {product.name}
+            </h3>
+          </div>
         </div>
 
-        <div className="mt-4 flex items-center justify-between rounded-2xl bg-background p-1.5">
-          <button
-            type="button"
-            disabled={!canSubtract}
-            onClick={() => onQuantityChange(quantity - 1)}
-            className="flex size-10 items-center justify-center rounded-xl bg-surface-container text-muted transition-colors hover:text-primary disabled:opacity-30 disabled:hover:text-muted"
-          >
-            <Minus size={18} />
-          </button>
+        <div className="mt-4 flex flex-col gap-4">
+          <div className="flex items-end gap-2">
+            <p className={`text-xl font-bold ${theme.text}`}>
+              {peso.format(finalPrice)}
+            </p>
+            {discount > 0 && (
+              <p className="text-sm text-muted line-through">
+                {peso.format(price)}
+              </p>
+            )}
+          </div>
 
-          <output className="flex-1 text-center font-sans text-xl font-bold">
-            {quantity}
-          </output>
+          <div className="flex items-center justify-between rounded-2xl bg-background p-1.5">
+            <button
+              type="button"
+              disabled={!canSubtract}
+              onClick={() => onQuantityChange(quantity - 1)}
+              className="flex size-10 items-center justify-center rounded-xl bg-surface-container text-muted transition-colors hover:text-primary disabled:opacity-30 disabled:hover:text-muted"
+            >
+              <Minus size={18} />
+            </button>
 
-          <button
-            type="button"
-            disabled={!canAdd}
-            onClick={() => onQuantityChange(quantity + 1)}
-            className="flex size-10 items-center justify-center rounded-xl bg-primary text-background transition-opacity hover:opacity-90 disabled:opacity-40"
-          >
-            <Plus size={18} />
-          </button>
+            <output className="flex-1 text-center font-sans text-xl font-bold">
+              {quantity}
+            </output>
+
+            <button
+              type="button"
+              disabled={!canAdd}
+              onClick={() => onQuantityChange(quantity + 1)}
+              className="flex size-10 items-center justify-center rounded-xl bg-primary text-background transition-opacity hover:opacity-90 disabled:opacity-40"
+            >
+              <Plus size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </article>

@@ -13,10 +13,10 @@ import { signOut } from "@/components/auth/actions";
 
 interface SidebarProps {
   username: string;
-  accountType?: "WORKER" | "ADMIN";
+  role?: "WORKER" | "ADMIN";
 }
 
-export function Sidebar({ username, accountType = "WORKER" }: SidebarProps) {
+export function Sidebar({ username, role = "WORKER" }: SidebarProps) {
   const pathname = usePathname();
   const reduce = useReducedMotion();
 
@@ -27,7 +27,7 @@ export function Sidebar({ username, accountType = "WORKER" }: SidebarProps) {
   // Filter top nav items based on accountType (only ADMIN sees Analytics)
   const filteredTopNavItems = TOP_NAV_ITEMS.filter((item) => {
     if (item.href === "/analytics") {
-      return accountType === "ADMIN";
+      return role === "ADMIN";
     }
     return true;
   });

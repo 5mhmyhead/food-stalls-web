@@ -10,7 +10,8 @@ import {
 import Image from "next/image";
 import type { Category, Product } from "@/lib/mock-data";
 import { getPricing, getStockStatus, peso } from "@/lib/product-utils";
-import { getProductTheme, getCategoryIcon } from "@/lib/product-ui";
+import { getProductTheme } from "@/lib/product-ui";
+import { getCategoryIcon } from "@/lib/category-icons";
 
 import Link from "next/link";
 
@@ -35,23 +36,23 @@ export default function ProductCard({
   const { soldOut, unavailable, lowStock } = getStockStatus(product);
 
   const theme = getProductTheme(product);
-  const CategoryIcon = getCategoryIcon(category);
+  const CategoryIcon = getCategoryIcon(category?.icon);
 
   return (
-    <Link href={`/menu?item=${product.id}`} className="flex">
+    <Link href={`/menu?item=${product.id}`} className="flex h-full w-full">
       <article
-        className={`w-full group flex flex-col overflow-hidden rounded-2xl bg-surface-container border-2 border-transparent transition-all duration-300 ${
+        className={`group flex h-full w-full flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-surface-container transition-all duration-300 ${
           theme.borderHover
         } ${unavailable ? "opacity-70" : ""}`}
       >
-        <div className="relative flex h-40 items-center justify-center bg-background">
+        <div className="relative flex h-40 shrink-0 items-center justify-center bg-background">
           {product.imageUrl ? (
             <Image
               src={product.imageUrl}
               alt={product.name}
               fill
               sizes="(min-width: 1024px) 25vw, 50vw"
-              className="object-cover transition-transform duration-300"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <CategoryIcon className="size-16 text-muted/50 transition-colors duration-300 group-hover:text-muted" />
@@ -71,20 +72,26 @@ export default function ProductCard({
           )}
         </div>
 
-        <div className="flex flex-1 flex-col gap-3 p-5">
-          <div>
-            {category && <p className="text-sm text-muted">{category.name}</p>}
-            <h3 className="mt-4 font-serif text-2xl font-bold leading-tight line-clamp-2">
-              {product.name}
-            </h3>
-            {product.description && (
-              <p className="mt-1 line-clamp-2 text-muted">
-                {product.description}
-              </p>
-            )}
+        <div className="flex flex-1 flex-col justify-between p-5">
+          <div className="flex flex-col">
+            <p className="text-sm font-medium text-muted">
+              {category?.name ?? "\u00A0"}
+            </p>
+            <div className="mt-1 flex h-14 items-start">
+              <h3 className="font-serif text-2xl font-bold leading-tight line-clamp-2">
+                {product.name}
+              </h3>
+            </div>
+            <div className="mt-2 flex h-10 items-start">
+              {product.description && (
+                <p className="line-clamp-2 text-sm text-muted">
+                  {product.description}
+                </p>
+              )}
+            </div>
           </div>
 
-          <div className="mt-auto flex items-end justify-between">
+          <div className="mt-4 flex items-end justify-between pt-2">
             <div>
               <p className={`text-xl font-bold ${theme.text}`}>
                 {peso.format(finalPrice)}

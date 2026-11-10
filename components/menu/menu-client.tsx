@@ -52,13 +52,13 @@ export default function MenuClient({
   }, [products, searchQuery, selectedCategory]);
 
   return (
-    <section className="flex h-full w-full flex-col gap-6 overflow-hidden rounded-3xl">
+    <section className="flex min-h-full w-full flex-col gap-6 rounded-3xl">
       <h1 className="shrink-0 font-serif text-6xl font-black pl-2 leading-tight">
         Menu
       </h1>
 
-      <div className="flex flex-1 min-h-0 flex-col gap-6">
-        <div className="shrink-0 w-full rounded-3xl bg-surface p-6">
+      <div className="flex flex-1 w-full flex-col gap-6">
+        <div className="w-full shrink-0 rounded-3xl bg-surface p-6">
           <MenuToolbar
             categories={categories}
             products={products}
@@ -80,7 +80,7 @@ export default function MenuClient({
         )}
 
         {filteredProducts.length === 0 ? (
-          <div className="flex flex-1 min-h-0 w-full flex-col items-center justify-center rounded-3xl bg-surface p-12 text-center">
+          <div className="flex flex-1 w-full flex-col items-center justify-center rounded-3xl bg-surface p-12 text-center">
             <div className="flex flex-col items-center gap-3">
               <h2 className="font-serif text-4xl font-bold">No menu items found.</h2>
               <p className="text-muted">
@@ -91,7 +91,7 @@ export default function MenuClient({
             </div>
           </div>
         ) : (
-          <div className="flex-1 min-h-0 overflow-y-auto rounded-3xl bg-surface p-6">
+          <div className="flex-1 w-full rounded-3xl bg-surface p-6">
             <div className="grid grid-cols-4 gap-4">
               {filteredProducts.map((product) => (
                 <ProductCard

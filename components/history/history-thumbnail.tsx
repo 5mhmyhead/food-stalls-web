@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { getCategoryIcon } from "@/lib/product-ui";
+import { getCategoryIcon } from "@/lib/category-icons";
 
 export default function HistoryThumbnail({ imgUrl }: { imgUrl?: string }) {
   const [hasError, setHasError] = useState(false);
