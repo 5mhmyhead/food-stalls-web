@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { peso } from "@/lib/product-utils";
+import type { OrderTypeEnum } from "@/components/orders/actions";
 
 export interface CartItem {
   id: number;
@@ -18,7 +20,15 @@ interface CartDetailsProps {
   orderId?: string;
   orderDate?: string;
   cashier?: string;
+  isPending?: boolean;
+  onCompleteOrder?: (type: OrderTypeEnum) => void;
 }
+
+const TYPE_MAP: Record<"Dine In" | "Take Out" | "Delivery", OrderTypeEnum> = {
+  "Dine In": "DINE_IN",
+  "Take Out": "TAKE_OUT",
+  Delivery: "DELIVERY",
+};
 
 export default function CartDetails({
   items = [],
@@ -29,6 +39,8 @@ export default function CartDetails({
     year: "numeric",
   }),
   cashier = "Staff",
+  isPending = false,
+  onCompleteOrder,
 }: CartDetailsProps) {
   const [orderType, setOrderType] = useState<"Dine In" | "Take Out" | "Delivery">(
     "Dine In"
@@ -52,7 +64,7 @@ export default function CartDetails({
               onClick={() => setOrderType(type)}
               className={`flex-1 rounded-xl py-2.5 text-center font-bold transition-all ${
                 orderType === type
-                  ? "bg-primary text-background shadow-sm"
+                  ? "bg-primary text-background"
                   : "text-muted hover:text-primary"
               }`}
             >
@@ -148,10 +160,18 @@ export default function CartDetails({
 
         <button
           type="button"
-          disabled={items.length === 0}
-          className="w-full btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
+          disabled={items.length === 0 || isPending}
+          onClick={() => onCompleteOrder?.(TYPE_MAP[orderType])}
+          className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Complete Order
+          {isPending ? (
+            <>
+              <Loader2 className="size-5 animate-spin" />
+              Processing Order...
+            </>
+          ) : (
+            "Complete Order"
+          )}
         </button>
       </div>
     </aside>

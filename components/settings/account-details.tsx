@@ -117,14 +117,9 @@ export default function AccountDetails({
               className="font-mono tracking-widest"
             />
 
-            {codeState?.message && (
-              <p
-                className={`text-xs font-semibold ${
-                  codeState.success ? "text-green-700" : "text-rose-500"
-                }`}
-                role="status"
-              >
-                {codeState.message}
+            {error && (
+              <p className="text-primary" role="alert">
+                {error}
               </p>
             )}
 

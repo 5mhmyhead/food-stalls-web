@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { UtensilsCrossed } from "lucide-react";
+import { useState, useMemo, useTransition } from "react";
 import MenuToolbar from "@/components/menu-toolbar";
 import OrderCard from "@/components/orders/order-card";
 import CartDetails, { type CartItem } from "@/components/orders/cart-details";
+import { createOrder, type OrderTypeEnum } from "@/components/orders/actions";
 import { getPricing } from "@/lib/product-utils";
 import type { categories, products } from "@/db/schema";
 
@@ -20,8 +20,31 @@ export default function OrdersClient({
   categories,
   products,
 }: OrdersClientProps) {
-  const categoryById = new Map(categories.map((c) => [c.id, c]));
+  const [isPending, startTransition] = useTransition();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
+  const categoryById = useMemo(
+    () => new Map(categories.map((c) => [c.id, c])),
+    [categories]
+  );
   const [quantities, setQuantities] = useState<Record<number, number>>({});
+
+  // Filter products based on search term and category selection
+  const filteredProducts = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return products.filter((product) => {
+      const matchesSearch =
+        !q ||
+        product.name.toLowerCase().includes(q) ||
+        product.description?.toLowerCase().includes(q);
+
+      const matchesCategory =
+        selectedCategory === null || product.categoryId === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, searchQuery, selectedCategory]);
 
   // Derive cart items dynamically from quantities map
   const cartItems: CartItem[] = products
@@ -42,6 +65,30 @@ export default function OrdersClient({
       };
     });
 
+  const handleCompleteOrder = (selectedOrderType: OrderTypeEnum) => {
+    if (cartItems.length === 0) return;
+
+    const orderPayload = cartItems.map((item) => {
+      const product = products.find((p) => p.id === item.id);
+      const { finalPrice } = getPricing(product!);
+
+      return {
+        productId: item.id,
+        quantity: item.quantity,
+        unitPrice: finalPrice,
+      };
+    });
+
+    startTransition(async () => {
+      try {
+        await createOrder(orderPayload, selectedOrderType);
+        setQuantities({});
+      } catch (err) {
+        console.error("Failed to complete order:", err);
+      }
+    });
+  };
+
   return (
     <section className="flex h-full w-full flex-col gap-6 overflow-hidden">
       <h1 className="shrink-0 font-serif text-6xl font-black pl-2 leading-tight">
@@ -55,22 +102,30 @@ export default function OrdersClient({
               categories={categories}
               products={products}
               variant="compact"
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
             />
           </div>
 
-          {products.length === 0 ? (
+          {filteredProducts.length === 0 ? (
             <div className="flex flex-1 min-h-0 w-full flex-col items-center justify-center rounded-3xl bg-surface p-12 text-center">
               <div className="flex flex-col items-center gap-3">
-                <h2 className="font-serif text-4xl font-bold">No menu items found.</h2>
+                <h2 className="font-serif text-4xl font-bold">
+                  No menu items found.
+                </h2>
                 <p className="text-muted">
-                  There are no menu products available right now.
+                  {searchQuery || selectedCategory !== null
+                    ? "No products match your search or category filter."
+                    : "There are no menu products available right now."}
                 </p>
               </div>
             </div>
           ) : (
             <div className="flex-1 min-h-0 overflow-y-auto rounded-3xl bg-surface p-6">
               <div className="grid grid-cols-2 gap-4">
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                   <OrderCard
                     key={product.id}
                     product={product}
@@ -90,7 +145,11 @@ export default function OrdersClient({
         </div>
 
         <div className="flex flex-1 min-h-0">
-          <CartDetails items={cartItems} />
+          <CartDetails
+            items={cartItems}
+            isPending={isPending}
+            onCompleteOrder={handleCompleteOrder}
+          />
         </div>
       </div>
     </section>

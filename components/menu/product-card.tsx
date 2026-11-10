@@ -4,7 +4,6 @@ import {
   Soup,
   Cookie,
   CupSoda,
-  UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
 
@@ -52,7 +51,7 @@ export default function ProductCard({
               alt={product.name}
               fill
               sizes="(min-width: 1024px) 25vw, 50vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-300"
             />
           ) : (
             <CategoryIcon className="size-16 text-muted/50 transition-colors duration-300 group-hover:text-muted" />
@@ -75,7 +74,7 @@ export default function ProductCard({
         <div className="flex flex-1 flex-col gap-3 p-5">
           <div>
             {category && <p className="text-sm text-muted">{category.name}</p>}
-            <h3 className="mt-4 font-serif text-2xl font-bold leading-tight">
+            <h3 className="mt-4 font-serif text-2xl font-bold leading-tight line-clamp-2">
               {product.name}
             </h3>
             {product.description && (
