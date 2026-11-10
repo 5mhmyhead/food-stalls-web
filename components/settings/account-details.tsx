@@ -117,9 +117,12 @@ export default function AccountDetails({
               className="font-mono tracking-widest"
             />
 
-            {error && (
-              <p className="text-primary" role="alert">
-                {error}
+            {codeState?.message && (
+              <p
+                className="text-primary"
+                role="status"
+              >
+                {codeState.message}
               </p>
             )}
 
