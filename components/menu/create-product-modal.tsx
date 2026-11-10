@@ -281,7 +281,7 @@ function ModalContent({
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
-                    className={`flex h-64 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-6 text-center transition-colors [&>*]:pointer-events-none ${
+                    className={`flex h-64 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-6 text-center transition-colors *:pointer-events-none ${
                       isDragging
                         ? "border-primary bg-primary/10"
                         : "border-muted/30 bg-surface-container hover:border-primary/60"

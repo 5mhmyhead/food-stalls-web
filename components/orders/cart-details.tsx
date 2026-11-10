@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { peso } from "@/lib/product-utils";
+import type { OrderTypeEnum } from "@/components/orders/actions";
 
 export interface CartItem {
   id: number;
@@ -20,8 +21,14 @@ interface CartDetailsProps {
   orderDate?: string;
   cashier?: string;
   isPending?: boolean;
-  onCompleteOrder?: () => void;
+  onCompleteOrder?: (type: OrderTypeEnum) => void;
 }
+
+const TYPE_MAP: Record<"Dine In" | "Take Out" | "Delivery", OrderTypeEnum> = {
+  "Dine In": "DINE_IN",
+  "Take Out": "TAKE_OUT",
+  Delivery: "DELIVERY",
+};
 
 export default function CartDetails({
   items = [],
@@ -154,7 +161,7 @@ export default function CartDetails({
         <button
           type="button"
           disabled={items.length === 0 || isPending}
-          onClick={onCompleteOrder}
+          onClick={() => onCompleteOrder?.(TYPE_MAP[orderType])}
           className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {isPending ? (

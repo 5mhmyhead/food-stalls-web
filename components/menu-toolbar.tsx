@@ -66,6 +66,10 @@ interface MenuToolbarProps {
   products: Product[];
   variant?: Variant;
   isAdmin?: boolean;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
+  selectedCategory?: number | null;
+  onCategoryChange?: (categoryId: number | null) => void;
 }
 
 interface FilterChipProps {
@@ -74,6 +78,7 @@ interface FilterChipProps {
   count: number;
   active?: boolean;
   variant: Variant;
+  onClick?: () => void;
 }
 
 function FilterChip({
@@ -82,12 +87,14 @@ function FilterChip({
   count,
   active = false,
   variant,
+  onClick,
 }: FilterChipProps) {
   const styles = VARIANT_STYLES[variant];
 
   return (
     <button
       type="button"
+      onClick={onClick}
       className={`flex rounded-xl font-bold transition-colors ${styles.chip} ${
         active
           ? "bg-primary text-background"
@@ -116,6 +123,10 @@ export default function MenuToolbar({
   products,
   variant = "default",
   isAdmin = false,
+  searchQuery = "",
+  onSearchChange,
+  selectedCategory = null,
+  onCategoryChange,
 }: MenuToolbarProps) {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
@@ -138,6 +149,8 @@ export default function MenuToolbar({
             <TextField
               id="search"
               name="search"
+              value={searchQuery}
+              onChange={(e) => onSearchChange?.(e.target.value)}
               placeholder="Search for a menu item..."
               icon={<Search size={styles.searchIcon} />}
             />
@@ -168,7 +181,8 @@ export default function MenuToolbar({
             icon={LayoutGrid}
             label="All Items"
             count={products.length}
-            active
+            active={selectedCategory === null}
+            onClick={() => onCategoryChange?.(null)}
             variant={variant}
           />
 
@@ -180,6 +194,8 @@ export default function MenuToolbar({
                 icon={CategoryIcon}
                 label={category.name}
                 count={categoryCounts[category.id] ?? 0}
+                active={selectedCategory === category.id}
+                onClick={() => onCategoryChange?.(category.id)}
                 variant={variant}
               />
             );

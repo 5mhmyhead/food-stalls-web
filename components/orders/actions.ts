@@ -24,7 +24,12 @@ export interface CreateOrderItemInput {
   unitPrice: number;
 }
 
-export async function createOrder(items: CreateOrderItemInput[]) {
+export type OrderTypeEnum = "DINE_IN" | "TAKE_OUT" | "DELIVERY";
+
+export async function createOrder(
+  items: CreateOrderItemInput[],
+  orderType: OrderTypeEnum = "DINE_IN"
+) {
   if (!items || items.length === 0) {
     throw new Error("Cannot create an empty order.");
   }
@@ -38,6 +43,7 @@ export async function createOrder(items: CreateOrderItemInput[]) {
     .insert(orders)
     .values({
       employeeId: user?.id ?? null,
+      orderType,
       status: "PENDING",
     })
     .returning({ id: orders.id });

@@ -24,8 +24,8 @@ export default function LowStock({
     .sort((a, b) => a.stock - b.stock);
 
   return (
-    <div className="flex w-full flex-col gap-4 rounded-3xl bg-surface p-6">
-      <div className="flex items-center justify-between">
+    <div className="flex w-full flex-col rounded-3xl bg-surface overflow-hidden">
+      <div className="flex shrink-0 items-center justify-between p-6 pb-4">
         <h2 className="font-serif text-4xl font-bold">Menu Items to Restock</h2>
         <span className="rounded-xl bg-tertiary/20 px-3 py-2 font-medium text-tertiary">
           {lowStockProducts.length}{" "}
@@ -33,9 +33,9 @@ export default function LowStock({
         </span>
       </div>
 
-      <div className="flex w-full items-stretch gap-4 overflow-x-auto scrollbar-thin">
-        {lowStockProducts.length > 0 ? (
-          lowStockProducts.map((product) => (
+      {lowStockProducts.length > 0 ? (
+        <div className="flex w-full items-stretch gap-4 overflow-x-auto scrollbar-thin px-6 pb-6">
+          {lowStockProducts.map((product) => (
             <div
               key={product.id}
               className="flex w-[calc((100%-3*1rem)/4)] min-w-[220px] shrink-0 flex-col [&>*]:h-full"
@@ -45,16 +45,16 @@ export default function LowStock({
                 category={categoryById.get(product.categoryId)}
               />
             </div>
-          ))
-        ) : (
-          <div className="flex flex-col h-50 w-full justify-center items-center gap-3">
-            <h2 className="font-serif text-4xl font-bold">All good here!</h2>
-            <p className="text-muted">
-              All items with healthy stock.
-            </p>
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col h-50 w-full items-center justify-center gap-3 p-6 pb-6">
+          <h2 className="font-serif text-4xl font-bold">All good here!</h2>
+          <p className="text-muted">
+            All items with healthy stock.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,7 +4,6 @@ import {
   Soup,
   Cookie,
   CupSoda,
-  UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
 

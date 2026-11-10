@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useMemo, useTransition } from "react";
 import MenuToolbar from "@/components/menu-toolbar";
 import OrderCard from "@/components/orders/order-card";
 import CartDetails, { type CartItem } from "@/components/orders/cart-details";
-import { createOrder } from "@/components/orders/actions";
+import { createOrder, type OrderTypeEnum } from "@/components/orders/actions";
 import { getPricing } from "@/lib/product-utils";
 import type { categories, products } from "@/db/schema";
 
@@ -21,10 +21,32 @@ export default function OrdersClient({
   products,
 }: OrdersClientProps) {
   const [isPending, startTransition] = useTransition();
-  const categoryById = new Map(categories.map((c) => [c.id, c]));
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
+  const categoryById = useMemo(
+    () => new Map(categories.map((c) => [c.id, c])),
+    [categories]
+  );
   const [quantities, setQuantities] = useState<Record<number, number>>({});
 
-  // derive cart items dynamically from quantities map
+  // Filter products based on search term and category selection
+  const filteredProducts = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return products.filter((product) => {
+      const matchesSearch =
+        !q ||
+        product.name.toLowerCase().includes(q) ||
+        product.description?.toLowerCase().includes(q);
+
+      const matchesCategory =
+        selectedCategory === null || product.categoryId === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, searchQuery, selectedCategory]);
+
+  // Derive cart items dynamically from quantities map
   const cartItems: CartItem[] = products
     .filter((product) => (quantities[product.id] ?? 0) > 0)
     .map((product) => {
@@ -43,7 +65,7 @@ export default function OrdersClient({
       };
     });
 
-  const handleCompleteOrder = () => {
+  const handleCompleteOrder = (selectedOrderType: OrderTypeEnum) => {
     if (cartItems.length === 0) return;
 
     const orderPayload = cartItems.map((item) => {
@@ -59,7 +81,7 @@ export default function OrdersClient({
 
     startTransition(async () => {
       try {
-        await createOrder(orderPayload);
+        await createOrder(orderPayload, selectedOrderType);
         setQuantities({});
       } catch (err) {
         console.error("Failed to complete order:", err);
@@ -80,24 +102,30 @@ export default function OrdersClient({
               categories={categories}
               products={products}
               variant="compact"
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
             />
           </div>
 
-          {products.length === 0 ? (
+          {filteredProducts.length === 0 ? (
             <div className="flex flex-1 min-h-0 w-full flex-col items-center justify-center rounded-3xl bg-surface p-12 text-center">
               <div className="flex flex-col items-center gap-3">
                 <h2 className="font-serif text-4xl font-bold">
                   No menu items found.
                 </h2>
                 <p className="text-muted">
-                  There are no menu products available right now.
+                  {searchQuery || selectedCategory !== null
+                    ? "No products match your search or category filter."
+                    : "There are no menu products available right now."}
                 </p>
               </div>
             </div>
           ) : (
             <div className="flex-1 min-h-0 overflow-y-auto rounded-3xl bg-surface p-6">
               <div className="grid grid-cols-2 gap-4">
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                   <OrderCard
                     key={product.id}
                     product={product}

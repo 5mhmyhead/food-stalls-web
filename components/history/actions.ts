@@ -3,6 +3,7 @@
 import { db } from "@/db";
 import { orders, orderItems, products, categories, profiles } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export interface DetailedOrderItem {
   id: number;
@@ -28,6 +29,8 @@ export interface OrderHistoryItem {
   itemImages: string[];
   items: DetailedOrderItem[];
 }
+
+export type OrderStatusType = "PENDING" | "COMPLETED" | "CANCELLED";
 
 export async function getHistoryData(): Promise<OrderHistoryItem[]> {
   const allOrders = await db
@@ -110,4 +113,18 @@ export async function getHistoryData(): Promise<OrderHistoryItem[]> {
       items: detailedItems,
     };
   });
+}
+
+export async function updateOrderStatus(
+  orderId: number,
+  status: OrderStatusType
+) {
+  await db
+    .update(orders)
+    .set({ status })
+    .where(eq(orders.id, orderId));
+
+  revalidatePath("/history");
+  revalidatePath("/orders");
+  revalidatePath("/home");
 }

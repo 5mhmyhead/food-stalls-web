@@ -17,6 +17,11 @@ export const orderStatus = pgEnum("order_status", [
   "COMPLETED",
   "CANCELLED",
 ]);
+export const orderType = pgEnum("order_type", [
+  "DINE_IN",
+  "TAKE_OUT",
+  "DELIVERY",
+]);
 
 export const profiles = pgTable("profiles", {
   id: uuid("id")
@@ -57,6 +62,7 @@ export const orders = pgTable("orders", {
     onDelete: "set null",
   }),
   customerId: integer("customer_id"),
+  orderType: orderType("order_type").notNull().default("DINE_IN"),
   status: orderStatus("status").notNull().default("PENDING"),
   orderedAt: timestamp("ordered_at").notNull().defaultNow(),
 }).enableRLS();
