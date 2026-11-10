@@ -5,6 +5,7 @@ import { Search, LayoutGrid, type LucideIcon } from "lucide-react";
 import TextField from "./text-field";
 import CreateProductModal from "@/components/menu/create-product-modal";
 import CreateCategoryModal from "@/components/menu/create-category-modal";
+import EditCategoryModal from "@/components/menu/edit-category-modal";
 import { getCategoryIcon } from "@/lib/category-icons";
 import type { categories, products } from "@/db/schema";
 
@@ -107,6 +108,7 @@ export default function MenuToolbar({
 }: MenuToolbarProps) {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
 
   const styles = VARIANT_STYLES[variant];
 
@@ -149,6 +151,15 @@ export default function MenuToolbar({
               >
                 Create Category
               </button>
+              {categories.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setIsEditCategoryModalOpen(true)}
+                  className="btn-tertiary whitespace-nowrap"
+                >
+                  Edit Categories
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -186,6 +197,13 @@ export default function MenuToolbar({
       <CreateCategoryModal
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
+      />
+
+      <EditCategoryModal
+        isOpen={isEditCategoryModalOpen}
+        onClose={() => setIsEditCategoryModalOpen(false)}
+        categories={categories}
+        selectedCategoryId={selectedCategory}
       />
     </>
   );

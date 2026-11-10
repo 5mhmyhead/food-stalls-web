@@ -75,6 +75,8 @@ export default function MenuClient({
             <ProductDetails
               product={selectedProduct}
               category={categoryById.get(selectedProduct.categoryId)}
+              categories={categories}
+              isAdmin={isAdmin}
             />
           </DetailsPanel>
         )}

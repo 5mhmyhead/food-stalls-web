@@ -179,7 +179,7 @@ function ModalContent({
 
         if (selectedFile) {
           const ext = selectedFile.name.split(".").pop()?.toLowerCase() ?? "jpg";
-          const path = `products/${crypto.randomUUID()}.${ext}`;
+          const path = `${crypto.randomUUID()}.${ext}`;
 
           const { error: uploadError } = await supabase.storage
             .from("products")
@@ -223,7 +223,7 @@ function ModalContent({
         if (e.target === e.currentTarget && !isPending) onClose();
       }}
     >
-      <div className="flex max-h-[90dvh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-surface shadow-2xl">
+      <div className="flex max-h-[90dvh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-surface">
         <div className="flex items-start justify-between gap-4 px-10 pb-4 pt-8">
           <div>
             <h2 id="create-product-title" className="font-serif text-3xl font-bold">
@@ -290,7 +290,7 @@ function ModalContent({
                     <ImagePlus className="size-14 stroke-[1.5] text-muted" />
                     <span className="text-xl font-extrabold">Upload Image</span>
                     <span className="text-sm font-medium text-muted">
-                      Drag and drop or click to browse. PNG or JPG, up to 2MB.
+                      Drag and drop or click to browse. PNG, JPG or WebP, up to 2MB.
                     </span>
                   </button>
                 )}

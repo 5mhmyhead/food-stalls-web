@@ -1,6 +1,6 @@
 "use client";
 
-import type { RevenueBreakdownItem } from "@/lib/mock-data";
+import { RevenueBreakdownItem } from "@/lib/analytics-types";
 
 const CHART_PALETTE = [
   "bg-primary",

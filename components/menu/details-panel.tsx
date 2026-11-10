@@ -70,7 +70,7 @@ export function CloseButton() {
     <button
       type="button"
       onClick={panel?.close}
-      className="rounded-full p-2 text-muted transition-colors hover:text-primary"
+       className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface-container text-muted transition-colors hover:text-primary disabled:opacity-50"
     >
       <X size={20} />
     </button>

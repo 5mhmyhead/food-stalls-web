@@ -1,8 +1,8 @@
 "use client";
 
+import { CategoryBreakdownItem } from "@/lib/analytics-types";
 import { useState, useEffect } from "react";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
-import type { CategoryBreakdownItem } from "@/lib/mock-data";
 
 const CHART_PALETTE = [
   { bg: "bg-primary", fill: "fill-primary" },

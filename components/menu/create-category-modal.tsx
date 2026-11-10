@@ -96,7 +96,7 @@ function ModalContent({ onClose }: Omit<CreateCategoryModalProps, "isOpen">) {
         if (e.target === e.currentTarget && !isPending) onClose();
       }}
     >
-      <div className="flex max-h-[90dvh] w-full max-w-xl flex-col overflow-hidden rounded-3xl bg-surface shadow-2xl">
+      <div className="flex max-h-[90dvh] w-full max-w-xl flex-col overflow-hidden rounded-3xl bg-surface">
         <div className="flex items-start justify-between gap-4 px-8 pb-4 pt-8">
           <div>
             <h2 id="create-category-title" className="font-serif text-3xl font-bold">

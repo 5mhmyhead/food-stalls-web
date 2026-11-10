@@ -1,19 +1,31 @@
+"use client";
+
 import { ChevronDown } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useTransition } from "react";
+import type { TimeRange } from "@/lib/analytics-types";
 
-export type TimeRange = "daily" | "weekly" | "monthly" | "all-time";
+export function TimeRangeSelect({ value }: { value: TimeRange }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
 
-type TimeRangeSelectProps = {
-  value: TimeRange;
-  onChange: (value: TimeRange) => void;
-};
+  function handleChange(next: TimeRange) {
+    startTransition(() => {
+      router.replace(`${pathname}?range=${next}`, { scroll: false });
+    });
+  }
 
-export function TimeRangeSelect({ value, onChange }: TimeRangeSelectProps) {
   return (
     <div className="relative inline-block">
       <select
         value={value}
-        onChange={(e) => onChange(e.target.value as TimeRange)}
-        className="cursor-pointer appearance-none rounded-2xl bg-surface px-5 py-3 pr-10 text-sm font-semibold capitalize transition-colors hover:bg-surface/80 focus:outline-none"
+        onChange={(e) => handleChange(e.target.value as TimeRange)}
+        aria-label="Time range"
+        aria-busy={isPending}
+        className={`cursor-pointer appearance-none rounded-2xl bg-surface px-5 py-3 pr-10 text-sm font-semibold capitalize transition-opacity hover:bg-surface/80 focus:outline-none ${
+          isPending ? "opacity-60" : ""
+        }`}
       >
         <option value="daily">Daily</option>
         <option value="weekly">Weekly</option>
