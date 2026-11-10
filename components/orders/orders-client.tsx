@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { UtensilsCrossed } from "lucide-react";
+import { useState, useTransition } from "react";
 import MenuToolbar from "@/components/menu-toolbar";
 import OrderCard from "@/components/orders/order-card";
 import CartDetails, { type CartItem } from "@/components/orders/cart-details";
+import { createOrder } from "@/components/orders/actions";
 import { getPricing } from "@/lib/product-utils";
 import type { categories, products } from "@/db/schema";
 
@@ -20,10 +20,11 @@ export default function OrdersClient({
   categories,
   products,
 }: OrdersClientProps) {
+  const [isPending, startTransition] = useTransition();
   const categoryById = new Map(categories.map((c) => [c.id, c]));
   const [quantities, setQuantities] = useState<Record<number, number>>({});
 
-  // Derive cart items dynamically from quantities map
+  // derive cart items dynamically from quantities map
   const cartItems: CartItem[] = products
     .filter((product) => (quantities[product.id] ?? 0) > 0)
     .map((product) => {
@@ -41,6 +42,30 @@ export default function OrdersClient({
         discount,
       };
     });
+
+  const handleCompleteOrder = () => {
+    if (cartItems.length === 0) return;
+
+    const orderPayload = cartItems.map((item) => {
+      const product = products.find((p) => p.id === item.id);
+      const { finalPrice } = getPricing(product!);
+
+      return {
+        productId: item.id,
+        quantity: item.quantity,
+        unitPrice: finalPrice,
+      };
+    });
+
+    startTransition(async () => {
+      try {
+        await createOrder(orderPayload);
+        setQuantities({});
+      } catch (err) {
+        console.error("Failed to complete order:", err);
+      }
+    });
+  };
 
   return (
     <section className="flex h-full w-full flex-col gap-6 overflow-hidden">
@@ -61,7 +86,9 @@ export default function OrdersClient({
           {products.length === 0 ? (
             <div className="flex flex-1 min-h-0 w-full flex-col items-center justify-center rounded-3xl bg-surface p-12 text-center">
               <div className="flex flex-col items-center gap-3">
-                <h2 className="font-serif text-4xl font-bold">No menu items found.</h2>
+                <h2 className="font-serif text-4xl font-bold">
+                  No menu items found.
+                </h2>
                 <p className="text-muted">
                   There are no menu products available right now.
                 </p>
@@ -90,7 +117,11 @@ export default function OrdersClient({
         </div>
 
         <div className="flex flex-1 min-h-0">
-          <CartDetails items={cartItems} />
+          <CartDetails
+            items={cartItems}
+            isPending={isPending}
+            onCompleteOrder={handleCompleteOrder}
+          />
         </div>
       </div>
     </section>

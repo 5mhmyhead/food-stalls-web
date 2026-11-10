@@ -75,7 +75,7 @@ export default function ProductCard({
         <div className="flex flex-1 flex-col gap-3 p-5">
           <div>
             {category && <p className="text-sm text-muted">{category.name}</p>}
-            <h3 className="mt-4 font-serif text-2xl font-bold leading-tight">
+            <h3 className="mt-4 font-serif text-2xl font-bold leading-tight line-clamp-2">
               {product.name}
             </h3>
             {product.description && (
