@@ -1,13 +1,14 @@
 "use server";
 
 import { createHash, timingSafeEqual } from "node:crypto";
+import { hashCode, matchesCode } from "@/lib/access-code";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { and, count, eq, gt } from "drizzle-orm";
 import { createClient } from "@/utils/supabase/server";
 import { db } from "@/db";
-import { accessCodeAttempts, profiles } from "@/db/schema";
+import { accessCodeAttempts, profiles, staffAccessCode } from "@/db/schema";
 import { verifyUser, verifyAdmin } from "@/lib/dal";
 import {
   SignInSchema,
@@ -144,10 +145,7 @@ export async function updatePassword(
     password: form.get("password"),
     confirmPassword: form.get("confirmPassword"),
   });
-
-  if (!parsed.success) {
-    return { message: parsed.error.issues[0].message };
-  }
+  if (!parsed.success) return { message: parsed.error.issues[0].message };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({
@@ -155,15 +153,29 @@ export async function updatePassword(
   });
 
   if (error) {
-    return {
-      message:
-        "Could not update your password. The link may have expired, so request a new one.",
-    };
+    console.error("updatePassword failed:", error.code, error.message);
+
+    if (error.code === "same_password") {
+      return {
+        message: "Your new password must be different from the old one.",
+      };
+    }
+    if (error.code === "weak_password") {
+      return {
+        message:
+          "That password is too weak. Use a longer, harder-to-guess one.",
+      };
+    }
+    if (error.message.toLowerCase().includes("session")) {
+      return { message: "Your reset session expired. Request a new link." };
+    }
+    return { message: "Could not update your password. Try again." };
   }
 
   cookieStore.delete("pw_recovery");
   redirect("/home");
 }
+
 export async function changePassword(
   _prev: AuthState,
   form: FormData,
@@ -342,13 +354,26 @@ export async function verifyAccessCode(
     return { message: "Too many attempts. Try again in 15 minutes." };
   }
 
-  const expected = process.env.STAFF_ACCESS_CODE;
-  if (!expected) {
-    console.error("STAFF_ACCESS_CODE is not set");
-    return { message: "Access codes aren't set up yet. Ask the shop owner." };
+  const [stored] = await db
+    .select()
+    .from(staffAccessCode)
+    .where(eq(staffAccessCode.id, 1))
+    .limit(1);
+
+  let valid = false;
+  if (stored) {
+    valid = matchesCode(code, stored.hash, stored.salt);
+  } else {
+    // no code saved in the database yet, so use the one in .env
+    const expected = process.env.STAFF_ACCESS_CODE;
+    if (!expected) {
+      console.error("STAFF_ACCESS_CODE is not set");
+      return { message: "Access codes aren't set up yet. Ask the shop owner." };
+    }
+    valid = codesMatch(code, expected);
   }
 
-  if (!codesMatch(code, expected)) {
+  if (!valid) {
     await db.insert(accessCodeAttempts).values({ userId: user.userId });
     return { message: "Invalid access code." };
   }
@@ -391,4 +416,36 @@ export async function revertToWorker(
 
   revalidatePath("/", "layout");
   return { message: "Your account is now a worker.", success: true };
+}
+export async function updateAccessCode(
+  _prev: AuthState,
+  form: FormData,
+): Promise<AuthState> {
+  const user = await verifyAdmin();
+
+  const newCode = String(form.get("accessCode") ?? "").trim();
+  const password = String(form.get("password") ?? "");
+
+  if (newCode.length < 8 || newCode.length > 64) {
+    return { message: "The access code must be 8 to 64 characters." };
+  }
+  if (!password) return { message: "Enter your password to confirm." };
+
+  const supabase = await createClient();
+  const { error: pwError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password,
+  });
+  if (pwError) return { message: "Incorrect password." };
+
+  const { hash, salt } = hashCode(newCode);
+  await db
+    .insert(staffAccessCode)
+    .values({ id: 1, hash, salt, updatedBy: user.userId })
+    .onConflictDoUpdate({
+      target: staffAccessCode.id,
+      set: { hash, salt, updatedBy: user.userId, updatedAt: new Date() },
+    });
+
+  return { message: "Access code updated.", success: true };
 }

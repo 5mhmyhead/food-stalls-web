@@ -92,3 +92,13 @@ export const accessCodeAttempts = pgTable("access_code_attempts", {
     .references(() => profiles.id, { onDelete: "cascade" }),
   attemptedAt: timestamp("attempted_at").notNull().defaultNow(),
 }).enableRLS();
+
+export const staffAccessCode = pgTable("staff_access_code", {
+  id: integer("id").primaryKey().default(1),
+  hash: text("hash").notNull(),
+  salt: text("salt").notNull(),
+  updatedBy: uuid("updated_by").references(() => profiles.id, {
+    onDelete: "set null",
+  }),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}).enableRLS();

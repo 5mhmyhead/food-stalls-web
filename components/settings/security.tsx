@@ -2,7 +2,11 @@
 
 import { useActionState } from "react";
 import TextField from "../text-field";
-import { changePassword, signOutOtherDevices } from "@/components/auth/actions";
+import {
+  changePassword,
+  signOutOtherDevices,
+  updateAccessCode,
+} from "@/components/auth/actions";
 
 interface SecurityProps {
   accountType?: "WORKER" | "ADMIN";
@@ -15,6 +19,10 @@ export default function Security({ accountType = "WORKER" }: SecurityProps) {
   );
   const [soState, soAction, soPending] = useActionState(
     signOutOtherDevices,
+    undefined,
+  );
+  const [codeState, codeAction, codePending] = useActionState(
+    updateAccessCode,
     undefined,
   );
 
@@ -64,26 +72,52 @@ export default function Security({ accountType = "WORKER" }: SecurityProps) {
         <>
           <hr className="border-t-2 border-background" />
 
-          <form className="flex flex-col gap-4" action="">
+          <form className="flex flex-col gap-4" action={codeAction}>
             <div>
-              <h2 className="font-serif text-xl font-bold">Admin Access Code</h2>
+              <h2 className="font-serif text-xl font-bold">
+                Admin Access Code
+              </h2>
               <p className="text-muted">
-                Update the access code for workers to upgrade their account to admin.
+                Update the access code for workers to upgrade their account to
+                admin.
               </p>
             </div>
 
-            <TextField
-              id="staffCode"
-              name="staffCode"
-              label="Staff access code"
-              autoComplete="off"
-              spellCheck={false}
-              required
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <TextField
+                id="accessCode"
+                name="accessCode"
+                label="New staff access code"
+                autoComplete="off"
+                spellCheck={false}
+                required
+                minLength={8}
+                maxLength={64}
+                className="font-mono tracking-widest"
+              />
+              <TextField
+                id="codePassword"
+                name="password"
+                label="Your password"
+                type="password"
+                autoComplete="current-password"
+                required
+              />
+            </div>
+
+            {codeState?.message && (
+              <p className="text-primary" role="status">
+                {codeState.message}
+              </p>
+            )}
 
             <div className="flex items-center gap-4">
-              <button type="submit" className="btn-primary">
-                Update Access Code
+              <button
+                type="submit"
+                disabled={codePending}
+                className="btn-primary"
+              >
+                {codePending ? "Updating..." : "Update Access Code"}
               </button>
             </div>
           </form>

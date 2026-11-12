@@ -71,6 +71,13 @@
       "when": 1794198446870,
       "tag": "0009_revert-own-admin",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794480036186,
+      "tag": "0010_staff-access-code",
+      "breakpoints": true
     }
   ]
 }
