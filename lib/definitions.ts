@@ -33,7 +33,7 @@ export const SignUpSchema = z
     error: "Passwords do not match.",
     path: ["confirmPassword"],
   });
-  
+
 export const ForgotPasswordSchema = z.object({
   email: z
     .string()
@@ -81,4 +81,12 @@ export const UpdateProfileSchema = z.object({
     .trim()
     .toLowerCase()
     .pipe(z.email({ error: "Enter a valid email address." })),
+});
+
+export const LowStockSchema = z.object({
+  lowStockThreshold: z.coerce
+    .number({ error: "Enter a number." })
+    .int({ error: "Use a whole number." })
+    .min(0, { error: "The threshold can't be negative." })
+    .max(1000, { error: "The threshold can't be more than 1000." }),
 });

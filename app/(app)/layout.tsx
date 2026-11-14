@@ -1,5 +1,7 @@
 import { Sidebar } from "@/components/sidebar";
+import { SettingsProvider } from "@/components/settings-provider";
 import { verifyUser } from "@/lib/dal";
+import { getLowStockThreshold } from "@/lib/settings";
 
 export default async function AppLayout({
   children,
@@ -7,11 +9,16 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const user = await verifyUser();
+  const lowStockThreshold = await getLowStockThreshold();
 
   return (
-    <div className="flex h-dvh w-dvw overflow-hidden p-6 gap-6">
-      <Sidebar username={user.username} role={user.role}/>
-      <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">{children}</main>
-    </div>
+    <SettingsProvider lowStockThreshold={lowStockThreshold}>
+      <div className="flex h-dvh w-dvw overflow-hidden p-6 gap-6">
+        <Sidebar username={user.username} />
+        <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
+    </SettingsProvider>
   );
 }

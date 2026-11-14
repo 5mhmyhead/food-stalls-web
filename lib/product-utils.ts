@@ -16,11 +16,14 @@ export function getPricing(product: Product) {
   return { price, discount, finalPrice, savings: price - finalPrice };
 }
 
-export function getStockStatus(product: Product) {
+export function getStockStatus(
+  product: Product,
+  lowStockThreshold: number = LOW_STOCK,
+) {
   const soldOut = product.stock === 0;
   return {
     soldOut,
     unavailable: !product.availability || soldOut,
-    lowStock: !soldOut && product.stock <= LOW_STOCK,
+    lowStock: !soldOut && product.stock <= lowStockThreshold,
   };
 }

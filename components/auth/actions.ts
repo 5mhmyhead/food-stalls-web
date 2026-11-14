@@ -8,7 +8,12 @@ import { revalidatePath } from "next/cache";
 import { and, count, eq, gt } from "drizzle-orm";
 import { createClient } from "@/utils/supabase/server";
 import { db } from "@/db";
-import { accessCodeAttempts, profiles, staffAccessCode } from "@/db/schema";
+import {
+  accessCodeAttempts,
+  profiles,
+  staffAccessCode,
+  shopSettings,
+} from "@/db/schema";
 import { verifyUser, verifyAdmin } from "@/lib/dal";
 import {
   SignInSchema,
@@ -17,6 +22,7 @@ import {
   ResetPasswordSchema,
   ChangePasswordSchema,
   UpdateProfileSchema,
+  LowStockSchema,
 } from "@/lib/definitions";
 
 export type AuthState =
@@ -448,4 +454,35 @@ export async function updateAccessCode(
     });
 
   return { message: "Access code updated.", success: true };
+}
+export async function updateLowStockThreshold(
+  _prev: AuthState,
+  form: FormData,
+): Promise<AuthState> {
+  const user = await verifyUser(); // any signed-in worker or admin
+
+  const raw = String(form.get("lowStockThreshold") ?? "").trim();
+  if (!raw) return { message: "Enter a number." };
+
+  const parsed = LowStockSchema.safeParse({ lowStockThreshold: raw });
+  if (!parsed.success) return { message: parsed.error.issues[0].message };
+
+  await db
+    .insert(shopSettings)
+    .values({
+      id: 1,
+      lowStockThreshold: parsed.data.lowStockThreshold,
+      updatedBy: user.userId,
+    })
+    .onConflictDoUpdate({
+      target: shopSettings.id,
+      set: {
+        lowStockThreshold: parsed.data.lowStockThreshold,
+        updatedBy: user.userId,
+        updatedAt: new Date(),
+      },
+    });
+
+  revalidatePath("/", "layout"); // refreshes the Menu so "Only X left" updates
+  return { message: "Threshold saved.", success: true };
 }

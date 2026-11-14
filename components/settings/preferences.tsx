@@ -1,64 +1,58 @@
 "use client";
 
+import { useActionState } from "react";
 import TextField from "../text-field";
-import Select from "../select";
+import { updateLowStockThreshold } from "@/components/auth/actions";
 
 export default function Preferences({
-  isManager = false,
+  lowStockThreshold = 5,
 }: {
-  isManager?: boolean;
+  lowStockThreshold?: number;
 }) {
+  const [state, action, pending] = useActionState(
+    updateLowStockThreshold,
+    undefined,
+  );
+
   return (
     <div className="flex flex-col gap-6">
-      <form className="flex flex-row items-center justify-between">
-        <div>
-          <h2 className="text-xl font-serif font-bold">Currency</h2>
-          <p className="text-muted">
-            Set the currency used when showing prices.
-          </p>
-        </div>
-        <div className="flex flex-row items-center gap-3">
-          <Select
-            name="currency"
-            defaultValue="PHP"
-            className="w-64"
-            options={[
-              { value: "PHP", label: "Philippine Peso (₱)" },
-              { value: "USD", label: "US Dollar ($)" },
-              { value: "EUR", label: "Euro (€)" },
-              { value: "JPY", label: "Japanese Yen (¥)" },
-            ]}
-          />
-
-          <button type="submit" className="btn-primary">
-            Save
-          </button>
-        </div>
-      </form>
-
-      <hr className="border-t-2 border-background" />
-
-      <form className="flex flex-row items-center justify-between">
-        <div>
-          <h2 className="text-xl font-serif font-bold">Inventory Threshold</h2>
-          <p className="text-muted">
-            Set when an item should be flagged as low on stock.
-          </p>
-        </div>
-        <div className="flex flex-row items-center gap-3">
-          <div className="w-28">
-            <TextField
-              id="lowStockThreshold"
-              name="lowStockThreshold"
-              type="number"
-              min={0}
-              defaultValue={10}
-            />
+      <form action={action} className="flex flex-col gap-3">
+        <div className="flex flex-row items-center justify-between">
+          <div>
+            <h2 className="text-xl font-serif font-bold">
+              Inventory Threshold
+            </h2>
+            <p className="text-muted">
+              Set when an item should be flagged as low on stock.
+            </p>
           </div>
-          <button type="submit" className="btn-primary">
-            Save
-          </button>
+          <div className="flex flex-row items-center gap-3">
+            <div className="w-28">
+              <TextField
+                key={lowStockThreshold}
+                id="lowStockThreshold"
+                name="lowStockThreshold"
+                type="number"
+                min={0}
+                max={1000}
+                required
+                defaultValue={lowStockThreshold}
+              />
+            </div>
+            <button type="submit" disabled={pending} className="btn-primary">
+              {pending ? "Saving..." : "Save"}
+            </button>
+          </div>
         </div>
+
+        {state?.message && (
+          <p
+            className={`text-sm ${state.success ? "text-green-700" : "text-red-600"}`}
+            role="status"
+          >
+            {state.message}
+          </p>
+        )}
       </form>
     </div>
   );

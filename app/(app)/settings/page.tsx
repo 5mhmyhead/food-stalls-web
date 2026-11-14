@@ -4,9 +4,11 @@ import Security from "@/components/settings/security";
 import AccountDeletion from "@/components/settings/account-deletion";
 import Preferences from "@/components/settings/preferences";
 import { verifyUser } from "@/lib/dal";
+import { getLowStockThreshold } from "@/lib/settings";
 
 export default async function SettingsPage() {
   const user = await verifyUser();
+  const lowStockThreshold = await getLowStockThreshold();
 
   return (
     <section className="h-full w-full rounded-3xl overflow-auto">
@@ -23,7 +25,7 @@ export default async function SettingsPage() {
           <Security accountType={user.role} />
         </SettingsSection>
         <SettingsSection title="Preferences">
-          <Preferences isManager={user.role === "ADMIN"} />
+          <Preferences lowStockThreshold={lowStockThreshold} />
         </SettingsSection>
         <SettingsSection title="Account Deletion">
           <AccountDeletion />

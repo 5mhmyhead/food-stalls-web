@@ -6,6 +6,7 @@ import { getPricing, getStockStatus, peso } from "@/lib/product-utils";
 import { getProductTheme } from "@/lib/product-ui";
 import type { categories, products } from "@/db/schema";
 import { getCategoryIcon } from "@/lib/category-icons";
+import { useLowStockThreshold } from "@/components/settings-provider";
 
 type Category = typeof categories.$inferSelect;
 type Product = typeof products.$inferSelect;
@@ -21,10 +22,11 @@ export default function OrderCard({
   quantity: number;
   onQuantityChange: (next: number) => void;
 }) {
+  const lowStockThreshold = useLowStockThreshold();
   const { price, discount, finalPrice } = getPricing(product);
   const { soldOut, unavailable } = getStockStatus(product);
 
-  const theme = getProductTheme(product);
+  const theme = getProductTheme(product, lowStockThreshold);
   const CategoryIcon = getCategoryIcon(category?.icon);
 
   const canAdd = !unavailable && quantity < product.stock;

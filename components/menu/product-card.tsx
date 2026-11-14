@@ -1,27 +1,15 @@
-import {
-  CookingPot,
-  Utensils,
-  Soup,
-  Cookie,
-  CupSoda,
-  type LucideIcon,
-} from "lucide-react";
+"use client";
 
 import Image from "next/image";
-import type { Category, Product } from "@/lib/mock-data";
+import Link from "next/link";
+import type { categories, products } from "@/db/schema";
 import { getPricing, getStockStatus, peso } from "@/lib/product-utils";
 import { getProductTheme } from "@/lib/product-ui";
 import { getCategoryIcon } from "@/lib/category-icons";
+import { useLowStockThreshold } from "@/components/settings-provider";
 
-import Link from "next/link";
-
-const ICON_MAP: Record<string, LucideIcon> = {
-  CookingPot,
-  Utensils,
-  Soup,
-  Cookie,
-  CupSoda,
-};
+type Category = typeof categories.$inferSelect;
+type Product = typeof products.$inferSelect;
 
 export default function ProductCard({
   product,
@@ -32,20 +20,25 @@ export default function ProductCard({
   category?: Category;
   selected?: boolean;
 }) {
-  const { price, discount, finalPrice } = getPricing(product);
-  const { soldOut, unavailable, lowStock } = getStockStatus(product);
+  const lowStockThreshold = useLowStockThreshold();
 
-  const theme = getProductTheme(product);
+  const { price, discount, finalPrice } = getPricing(product);
+  const { soldOut, unavailable, lowStock } = getStockStatus(
+    product,
+    lowStockThreshold,
+  );
+
+  const theme = getProductTheme(product, lowStockThreshold);
   const CategoryIcon = getCategoryIcon(category?.icon);
 
   return (
-    <Link href={`/menu?item=${product.id}`} className="flex h-full w-full">
+    <Link href={`/menu?item=${product.id}`} className="flex">
       <article
-        className={`group flex h-full w-full flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-surface-container transition-all duration-300 ${
+        className={`w-full group flex flex-col overflow-hidden rounded-2xl bg-surface-container border-2 border-transparent transition-all duration-300 ${
           theme.borderHover
         } ${unavailable ? "opacity-70" : ""}`}
       >
-        <div className="relative flex h-40 shrink-0 items-center justify-center bg-background">
+        <div className="relative flex h-40 items-center justify-center bg-background">
           {product.imageUrl ? (
             <Image
               src={product.imageUrl}
@@ -72,26 +65,20 @@ export default function ProductCard({
           )}
         </div>
 
-        <div className="flex flex-1 flex-col justify-between p-5">
-          <div className="flex flex-col">
-            <p className="text-sm font-medium text-muted">
-              {category?.name ?? "\u00A0"}
-            </p>
-            <div className="mt-1 flex h-14 items-start">
-              <h3 className="font-serif text-2xl font-bold leading-tight line-clamp-2">
-                {product.name}
-              </h3>
-            </div>
-            <div className="mt-2 flex h-10 items-start">
-              {product.description && (
-                <p className="line-clamp-2 text-sm text-muted">
-                  {product.description}
-                </p>
-              )}
-            </div>
+        <div className="flex flex-1 flex-col gap-3 p-5">
+          <div>
+            {category && <p className="text-sm text-muted">{category.name}</p>}
+            <h3 className="mt-4 font-serif text-2xl font-bold leading-tight">
+              {product.name}
+            </h3>
+            {product.description && (
+              <p className="mt-1 line-clamp-2 text-muted">
+                {product.description}
+              </p>
+            )}
           </div>
 
-          <div className="mt-4 flex items-end justify-between pt-2">
+          <div className="mt-auto flex items-end justify-between">
             <div>
               <p className={`text-xl font-bold ${theme.text}`}>
                 {peso.format(finalPrice)}

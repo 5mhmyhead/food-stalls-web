@@ -15,6 +15,7 @@ import {
 import type { categories, products } from "@/db/schema";
 import { CloseButton } from "./details-panel";
 import EditProductModal from "./edit-product-modal";
+import { useLowStockThreshold } from "@/components/settings-provider";
 
 type Category = typeof categories.$inferSelect;
 type Product = typeof products.$inferSelect;
@@ -26,8 +27,6 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Cookie,
   CupSoda,
 };
-
-const LOW_STOCK = 5;
 
 const peso = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -48,6 +47,7 @@ export default function ProductDetails({
   isAdmin = false,
 }: ProductDetailsProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const lowStockThreshold = useLowStockThreshold();
 
   const price = Number(product.price);
   const discount = Number(product.discount ?? 0);
@@ -55,7 +55,7 @@ export default function ProductDetails({
 
   const soldOut = product.stock === 0;
   const unavailable = !product.availability || soldOut;
-  const lowStock = !soldOut && product.stock <= LOW_STOCK;
+  const lowStock = !soldOut && product.stock <= lowStockThreshold;
 
   const theme = unavailable
     ? {
@@ -64,16 +64,16 @@ export default function ProductDetails({
         badgeBg: "bg-tertiary",
       }
     : lowStock
-    ? {
-        borderHover: "hover:border-secondary",
-        text: "text-secondary",
-        badgeBg: "bg-secondary",
-      }
-    : {
-        borderHover: "hover:border-primary",
-        text: "text-primary",
-        badgeBg: "bg-primary",
-      };
+      ? {
+          borderHover: "hover:border-secondary",
+          text: "text-secondary",
+          badgeBg: "bg-secondary",
+        }
+      : {
+          borderHover: "hover:border-primary",
+          text: "text-primary",
+          badgeBg: "bg-primary",
+        };
 
   const CategoryIcon =
     (category?.icon ? ICON_MAP[category.icon] : null) ?? UtensilsCrossed;
@@ -154,8 +154,8 @@ export default function ProductDetails({
               {soldOut
                 ? "No stock"
                 : lowStock
-                ? `Only ${product.stock} left`
-                : `${product.stock} in stock`}
+                  ? `Only ${product.stock} left`
+                  : `${product.stock} in stock`}
             </p>
           </div>
         </div>

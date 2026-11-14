@@ -102,3 +102,12 @@ export const staffAccessCode = pgTable("staff_access_code", {
   }),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }).enableRLS();
+
+export const shopSettings = pgTable("shop_settings", {
+  id: integer("id").primaryKey().default(1),
+  lowStockThreshold: integer("low_stock_threshold").notNull().default(5),
+  updatedBy: uuid("updated_by").references(() => profiles.id, {
+    onDelete: "set null",
+  }),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}).enableRLS();
