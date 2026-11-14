@@ -13,7 +13,7 @@ export default async function AppLayout({
 
   return (
     <SettingsProvider lowStockThreshold={lowStockThreshold}>
-      <div className="flex h-dvh w-dvw overflow-hidden p-6 gap-6">
+      <div className="fixed inset-0 flex overflow-hidden p-6 gap-6">
         <Sidebar username={user.username} />
         <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">
           {children}
