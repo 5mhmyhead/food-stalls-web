@@ -114,7 +114,6 @@ export default function AccountDetails({
               autoComplete="off"
               spellCheck={false}
               required
-              className="font-mono tracking-widest"
             />
 
             {codeState?.message && (

@@ -16,7 +16,7 @@ interface SidebarProps {
   role?: "WORKER" | "ADMIN";
 }
 
-export function Sidebar({ username, role = "WORKER" }: SidebarProps) {
+export function Sidebar({ username, role }: SidebarProps) {
   const pathname = usePathname();
   const reduce = useReducedMotion();
 

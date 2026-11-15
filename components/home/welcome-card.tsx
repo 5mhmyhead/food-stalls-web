@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { PlusCircle, UtensilsCrossed, History, Sparkles } from "lucide-react";
+import { PlusCircle, UtensilsCrossed, History } from "lucide-react";
 
 interface WelcomeCardProps {
   username?: string;
