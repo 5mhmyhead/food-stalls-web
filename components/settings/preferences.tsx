@@ -46,10 +46,7 @@ export default function Preferences({
         </div>
 
         {state?.message && (
-          <p
-            className={`text-sm ${state.success ? "text-green-700" : "text-red-600"}`}
-            role="status"
-          >
+          <p className="text-primary" role="status">
             {state.message}
           </p>
         )}
