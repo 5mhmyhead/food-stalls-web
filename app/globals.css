@@ -2,21 +2,21 @@
 
 @theme {
   /* background surfaces */
-  --color-background: #F8E9E5;
-  --color-surface: #E8D9D5;
-  --color-surface-container: #F0E0DC;
+  --color-background: #f8e9e5;
+  --color-surface: #e8d9d5;
+  --color-surface-container: #f0e0dc;
 
   /* text colors */
   --color-onSurface: #253657;
-  --color-muted: #565F77;
+  --color-muted: #565f77;
 
   /* brand colors */
-  --color-primary: #E76D8A;
-  --color-primary-soft: #F4A9B9;
-  --color-secondary: #F5A1A1;
-  --color-secondary-soft: #FFD6B7;
-  --color-tertiary: #693C5B;
-  --color-accent: #A69ACA;
+  --color-primary: #e76d8a;
+  --color-primary-soft: #f4a9b9;
+  --color-secondary: #f5a1a1;
+  --color-secondary-soft: #ffd6b7;
+  --color-tertiary: #693c5b;
+  --color-accent: #a69aca;
 }
 
 @theme inline {
@@ -30,27 +30,68 @@
     color: var(--color-onSurface);
   }
 }
+/* Firefox */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-soft) transparent;
+  }
+}
+
+/* Chrome, Edge, Safari */
+*::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 16px; /* keeps the track away from rounded corners */
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary-soft);
+  border-radius: 9999px;
+  border: 4px solid transparent; /* insets the thumb from the edge */
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary);
+}
+*::-webkit-scrollbar-button {
+  display: none; /* removes the little arrows */
+}
 
 @theme {
   --animate-panel-in: panel-in 300ms cubic-bezier(0.22, 1, 0.36, 1);
   --animate-panel-out: panel-out 220ms ease-in forwards;
 
   @keyframes panel-in {
-    from { grid-template-rows: 0fr; opacity: 0; }
-    to   { grid-template-rows: 1fr; opacity: 1; }
+    from {
+      grid-template-rows: 0fr;
+      opacity: 0;
+    }
+    to {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
   }
   @keyframes panel-out {
-    from { grid-template-rows: 1fr; opacity: 1; }
-    to   { grid-template-rows: 0fr; opacity: 0; }
+    from {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+    to {
+      grid-template-rows: 0fr;
+      opacity: 0;
+    }
   }
 }
 
 @utility btn-primary {
-  @apply px-6 py-3 rounded-xl bg-primary font-bold text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-90; 
+  @apply px-6 py-3 rounded-xl bg-primary font-bold text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-90;
 }
 
 @utility btn-secondary {
-  @apply px-6 py-3 rounded-xl bg-secondary font-bold text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50; 
+  @apply px-6 py-3 rounded-xl bg-secondary font-bold text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50;
 }
 
 @utility btn-tertiary {
@@ -58,7 +99,7 @@
 }
 
 @utility btn-muted {
-  @apply px-6 py-3 rounded-xl bg-muted/20 text-onSurface cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50; 
+  @apply px-6 py-3 rounded-xl bg-muted/20 text-onSurface cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50;
 }
 
 @utility input-control {
