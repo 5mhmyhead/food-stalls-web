@@ -27,13 +27,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfairDisplay.variable} ${poppins.variable}`}
+      className={`${playfairDisplay.variable} ${poppins.variable} overflow-x-clip`}
     >
-      <body>
-        <main className="relative min-h-0 flex-1 overflow-y-auto">
-          {children}
-        </main>
-      </body>
+      <body className="min-h-dvh overflow-x-clip">{children}</body>
     </html>
   );
 }
