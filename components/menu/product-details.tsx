@@ -90,7 +90,6 @@ export default function ProductDetails({
             <button
               type="button"
               onClick={() => setIsEditModalOpen(true)}
-              aria-label="Edit product details"
               className="flex size-10 items-center justify-center rounded-xl bg-surface-container text-muted transition-colors hover:text-primary"
             >
               <Pencil size={18} />

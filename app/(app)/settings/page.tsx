@@ -12,7 +12,7 @@ export default async function SettingsPage() {
 
   return (
     <section className="h-full w-full rounded-3xl overflow-auto">
-      <h1 className="font-serif font-black text-6xl pl-2">Settings</h1>
+      <h1 className="shrink-0 font-serif text-6xl font-black pl-2 leading-tight">Settings</h1>
       <div className="flex flex-col pt-6 gap-4">
         <SettingsSection title="Account Details">
           <AccountDetails

@@ -96,7 +96,7 @@ export default function OrdersClient({
       </h1>
 
       <div className="flex flex-1 min-h-0 gap-6">
-        <div className="flex flex-1 min-h-0 flex-col gap-6">
+        <div className="flex flex-1 min-w-0 min-h-0 flex-col gap-6">
           <div className="shrink-0 rounded-3xl bg-surface p-6">
             <MenuToolbar
               categories={categories}
@@ -144,7 +144,7 @@ export default function OrdersClient({
           )}
         </div>
 
-        <div className="flex flex-1 min-h-0">
+        <div className="flex flex-1 min-w-0 min-h-0">
           <CartDetails
             items={cartItems}
             isPending={isPending}

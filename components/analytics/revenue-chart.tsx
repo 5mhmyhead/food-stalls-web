@@ -16,17 +16,31 @@ interface RevenueChartProps {
 }
 
 export default function RevenueChart({ data, totalRevenue }: RevenueChartProps) {
+  if (data.length === 0) {
+    return (
+      <div className="flex h-full flex-col justify-between gap-6 rounded-3xl bg-surface p-6">
+        <div className="flex h-full items-center justify-center text-center">
+          <div className="flex flex-col items-center gap-3">
+            <h2 className="font-serif text-4xl font-bold">
+              No item revenue yet.
+            </h2>
+            <p className="text-muted">
+              Completed orders for this period will appear here.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full flex-col justify-between gap-6 rounded-3xl bg-surface p-6">
-
       <div className="flex flex-col gap-3">
         <h2 className="font-serif text-4xl font-bold">Item Revenue Chart</h2>
-        <span className="text-5xl font-bold text-onSurface">
-          {totalRevenue}
-        </span>
+        <span className="text-5xl font-bold text-onSurface">{totalRevenue}</span>
       </div>
 
-      <div className="my-2 flex h-8 w-full items-center gap-1.5 overflow-hidden rounded-sm">
+      <div className="my-2 flex h-8 w-full items-center gap-1.5">
         {data.map((item, index) => {
           const color = CHART_PALETTE[index % CHART_PALETTE.length];
 
@@ -34,7 +48,7 @@ export default function RevenueChart({ data, totalRevenue }: RevenueChartProps) 
             <div
               key={item.name}
               style={{ flexGrow: item.amount }}
-              className={`h-full basis-0 shrink transition-opacity hover:opacity-90 ${color}`}
+              className={`h-full basis-0 shrink rounded-md transition-opacity hover:opacity-90 ${color}`}
               title={`${item.name}: ₱${item.amount.toLocaleString("en-PH", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
@@ -54,10 +68,8 @@ export default function RevenueChart({ data, totalRevenue }: RevenueChartProps) 
               className="flex items-center justify-between font-semibold"
             >
               <div className="flex items-center gap-3">
-                <span
-                  className={`size-4 shrink-0 rounded-full ${color}`}
-                />
-                <span className="text-onSurface font-medium">{item.name}</span>
+                <span className={`size-4 shrink-0 rounded-full ${color}`} />
+                <span className="font-medium text-onSurface">{item.name}</span>
               </div>
               <span className="font-bold text-onSurface">
                 ₱

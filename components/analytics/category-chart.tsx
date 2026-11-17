@@ -27,6 +27,23 @@ export default function CategoryChart({
     setMounted(true);
   }, []);
 
+  if (data.length === 0) {
+    return (
+      <div className="flex h-full flex-col justify-between gap-6 rounded-3xl bg-surface p-6">
+        <div className="flex h-full items-center justify-center text-center">
+          <div className="flex flex-col items-center gap-3">
+            <h2 className="font-serif text-4xl font-bold">
+              No category sales yet.
+            </h2>
+            <p className="text-muted">
+              Completed orders for this period will appear here.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!mounted) {
     return <div className="h-full w-full rounded-3xl bg-surface" />;
   }
@@ -36,7 +53,7 @@ export default function CategoryChart({
       <h2 className="font-serif text-4xl font-bold">Sales by Category</h2>
 
       <div className="flex flex-1 items-center gap-6">
-        <div className="relative flex flex-1 h-64 w-1/2 items-center justify-center">
+        <div className="relative flex h-64 w-1/2 flex-1 items-center justify-center">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -45,7 +62,8 @@ export default function CategoryChart({
                 cy="50%"
                 innerRadius={85}
                 outerRadius={120}
-                paddingAngle={3}
+                paddingAngle={4}
+                cornerRadius={6}
                 dataKey="value"
               >
                 {data.map((_, index) => {
@@ -63,7 +81,7 @@ export default function CategoryChart({
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div className="rounded-xl bg-surface-container p-2.5 border border-muted/10">
+                      <div className="rounded-xl border border-muted/10 bg-surface-container p-2.5">
                         <p className="text-xs font-bold text-onSurface">
                           {payload[0].name}: {payload[0].value}%
                         </p>
@@ -83,12 +101,12 @@ export default function CategoryChart({
                   {totalProductsSold}
                 </span>
                 <span className="font-medium text-muted">items sold</span>
-              </> 
+              </>
             )}
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col justify-center gap-3 w-1/2">
+        <div className="flex w-1/2 flex-1 flex-col justify-center gap-3">
           {data.map((item, index) => {
             const palette = CHART_PALETTE[index % CHART_PALETTE.length];
 
@@ -101,7 +119,9 @@ export default function CategoryChart({
                   <span
                     className={`size-4 shrink-0 rounded-full ${palette.bg}`}
                   />
-                  <span className="font-medium text-onSurface">{item.name}</span>
+                  <span className="font-medium text-onSurface">
+                    {item.name}
+                  </span>
                 </div>
                 <span className="font-bold text-onSurface">{item.value}%</span>
               </div>

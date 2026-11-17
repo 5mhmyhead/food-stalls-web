@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Search, LayoutGrid, type LucideIcon } from "lucide-react";
 import TextField from "./text-field";
 import CreateProductModal from "@/components/menu/create-product-modal";
@@ -24,9 +24,9 @@ const VARIANT_STYLES: Record<
   }
 > = {
   default: {
-    chip: "flex-col items-start gap-2 px-5 py-3",
-    icon: "size-7",
-    label: "font-serif text-2xl",
+    chip: "flex-col items-start gap-1 px-5 py-3",
+    icon: "size-6",
+    label: "font-serif text-xl",
     searchIcon: 28,
     showCount: true,
   },
@@ -73,7 +73,7 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={`flex rounded-xl font-bold transition-colors ${styles.chip} ${
+      className={`flex shrink-0 whitespace-nowrap rounded-xl font-bold transition-colors ${styles.chip} ${
         active
           ? "bg-primary text-background"
           : "bg-surface-container text-muted hover:text-primary"
@@ -109,6 +109,23 @@ export default function MenuToolbar({
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
+  const categoriesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = categoriesRef.current;
+    if (!el) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (el.scrollWidth <= el.clientWidth) return;
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, []);
 
   const styles = VARIANT_STYLES[variant];
 
@@ -122,7 +139,7 @@ export default function MenuToolbar({
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className="flex min-w-0 flex-col gap-4">
         <div className="flex items-center gap-3">
           <div className="flex-1">
             <TextField
@@ -164,7 +181,10 @@ export default function MenuToolbar({
           )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div
+          ref={categoriesRef}
+          className="no-scrollbar flex items-center gap-2 overflow-x-auto overscroll-x-contain rounded-2xl"
+        >
           <FilterChip
             icon={LayoutGrid}
             label="All Items"
