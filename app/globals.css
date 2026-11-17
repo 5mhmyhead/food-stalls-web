@@ -29,7 +29,13 @@
     background-color: var(--color-background);
     color: var(--color-onSurface);
   }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    @apply cursor-pointer transition-all duration-150 active:scale-95;
+  }
 }
+
 /* Firefox */
 @supports not selector(::-webkit-scrollbar) {
   * {
@@ -99,19 +105,19 @@
 }
 
 @utility btn-primary {
-  @apply px-6 py-3 rounded-xl bg-primary font-bold text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-90;
+  @apply cursor-pointer justify-center rounded-xl bg-primary px-6 py-3 font-bold text-background transition-all duration-300 hover:opacity-90 active:scale-95 disabled:pointer-events-none disabled:opacity-50;
 }
 
 @utility btn-secondary {
-  @apply px-6 py-3 rounded-xl bg-secondary font-bold text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50;
+  @apply cursor-pointer justify-center rounded-xl bg-secondary px-6 py-3 font-bold text-background transition-all duration-300 hover:opacity-50 active:scale-95 disabled:pointer-events-none disabled:opacity-50;
 }
 
 @utility btn-tertiary {
-  @apply px-6 py-3 rounded-xl bg-tertiary font-bold text-background cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50; 
+  @apply cursor-pointer justify-center rounded-xl bg-tertiary px-6 py-3 font-bold text-background transition-all duration-300 hover:opacity-50 active:scale-95 disabled:pointer-events-none disabled:opacity-50;
 }
 
 @utility btn-muted {
-  @apply px-6 py-3 rounded-xl bg-muted/20 text-onSurface cursor-pointer justify-center transition-opacity duration-300 hover:opacity-50;
+  @apply cursor-pointer justify-center rounded-xl bg-muted/20 px-6 py-3 text-onSurface transition-all duration-300 hover:opacity-50 active:scale-95 disabled:pointer-events-none disabled:opacity-50;
 }
 
 @utility input-control {

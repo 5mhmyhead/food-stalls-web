@@ -48,7 +48,7 @@ export function Sidebar({ username, role }: SidebarProps) {
             <form action={signOut} key={item.label}>
               <button
                 type="submit"
-                className="relative flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-colors duration-300 hover:bg-primary-soft/50"
+                className="relative flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-all duration-150 hover:bg-primary-soft/50 active:scale-95"
               >
                 <span className="relative z-10 flex items-center gap-3">
                   <Icon className="block size-6 shrink-0" />
@@ -63,7 +63,7 @@ export function Sidebar({ username, role }: SidebarProps) {
           <Link
             key={item.href}
             href={item.href}
-            className={`relative flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-colors duration-300 ${
+            className={`relative flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-all duration-150 active:scale-95 ${
               active ? "text-primary" : "hover:bg-primary-soft/50"
             }`}
           >
