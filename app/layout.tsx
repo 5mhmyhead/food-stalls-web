@@ -1,5 +1,5 @@
 import { Playfair_Display, Poppins } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -17,6 +17,10 @@ const playfairDisplay = Playfair_Display({
 export const metadata: Metadata = {
   title: "Kawaii Count",
   description: "A cutesy food stalls website application.",
+};
+
+export const viewport: Viewport = {
+  colorScheme: "light",
 };
 
 export default function RootLayout({

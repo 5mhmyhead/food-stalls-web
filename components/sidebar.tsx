@@ -63,6 +63,7 @@ export function Sidebar({ username, role }: SidebarProps) {
           <Link
             key={item.href}
             href={item.href}
+            prefetch={false}
             className={`relative flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-all duration-150 active:scale-95 ${
               active ? "text-primary" : "hover:bg-primary-soft/50"
             }`}

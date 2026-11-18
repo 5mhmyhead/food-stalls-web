@@ -25,6 +25,10 @@
 }
 
 @layer base {
+  :root {
+    color-scheme: light only;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-onSurface);
