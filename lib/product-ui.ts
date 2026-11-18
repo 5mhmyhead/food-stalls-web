@@ -1,7 +1,12 @@
-import type { Product } from "@/lib/mock-data";
 import { getStockStatus } from "@/lib/product-utils";
 
-export function getProductTheme(product: Product, lowStockThreshold?: number) {
+export function getProductTheme(
+  product: {
+    stock: number;
+    availability: boolean;
+  },
+  lowStockThreshold?: number,
+) {
   const { unavailable, lowStock } = getStockStatus(product, lowStockThreshold);
 
   if (unavailable) {
